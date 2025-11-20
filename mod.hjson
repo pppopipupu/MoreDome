@@ -1,0 +1,23 @@
+#the mod name as displayed in-game
+displayName: "More Dome"
+
+#the internal name of your mod
+name: "moredome"
+
+#your name
+author: "pppopipupu"
+
+#the fully qualified main class of the mod
+main: "moredome.MoreDome"
+
+#the mod description as seen in the mod dialog
+description: "A Mindustry Java mod to add some dome"
+
+#the mod version
+version: 1.0
+
+#the minimum game build required to run this mod
+minGameVersion: 150
+
+#this is a java mod
+java: true

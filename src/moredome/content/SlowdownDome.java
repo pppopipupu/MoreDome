@@ -1,0 +1,61 @@
+package moredome.content;
+
+import arc.math.Mathf;
+import arc.util.Pack;
+import arc.util.Time;
+import mindustry.gen.Building;
+import mindustry.logic.Ranged;
+import mindustry.world.Block;
+import mindustry.world.blocks.defense.OverdriveProjector;
+
+import java.util.concurrent.atomic.AtomicReference;
+
+import static mindustry.Vars.indexer;
+
+public class SlowdownDome extends OverdriveProjector {
+
+    public SlowdownDome(String name) {
+        super(name);
+        range = 60f;
+        speedBoost = 0.6f;
+        consumesPower = false;
+        useTime = 0f;
+    }
+    public class SlowdownBuild extends OverdriveBuild {
+        private float power = 0f;
+        @Override
+        public void updateTile() {
+            smoothEfficiency = Mathf.lerpDelta(smoothEfficiency, efficiency, 0.08f);
+            this.heat = Mathf.lerpDelta(this.heat, this.efficiency > 0.0F ? 1.0F : 0.0F, 0.08F);
+            charge += heat * Time.delta;
+
+            if (charge >= reload) {
+                float realRange = range + phaseHeat * phaseRangeBoost;
+                charge = 0f;
+                power = 0f;
+
+                indexer.eachBlock(this, realRange, other -> other.block.canOverdrive && other != this && other.power != null && other.block.consPower != null
+                          && other.shouldConsumePower, other -> {
+                    other.applySlowdown(0.6f, reload + 1F);
+                    power += other.block.consPower.usage * other.timeScale();
+
+                });
+
+                if (efficiency > 0) {
+                    useProgress += delta();
+                }
+
+                if (useProgress >= useTime) {
+                    consume();
+                    useProgress %= useTime;
+                }
+            }
+        }
+
+        @Override
+        public float getPowerProduction() {
+            return power;
+        }
+    }
+    }
+
