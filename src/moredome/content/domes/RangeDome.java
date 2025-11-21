@@ -56,7 +56,7 @@ public class RangeDome extends OverdriveProjector {
 
                     float multiplier = 2.0f;
                     if (block.name.equals("fuse")) {
-                        multiplier = 6f;
+                        multiplier = 5.0f;
                     }
 
                     block.range = originalRanges.get(block, block.range) * multiplier;

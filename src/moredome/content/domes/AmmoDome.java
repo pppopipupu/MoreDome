@@ -52,48 +52,21 @@ public class AmmoDome extends OverdriveProjector {
                     Item bestAmmo = null;
                     float maxDamage = -1f;
 
-                    for(var entry : block.ammoTypes.entries()){
+                    for (var entry : block.ammoTypes.entries()) {
                         float damage = entry.value.damage;
-                        if(damage > maxDamage){
+                        if (damage > maxDamage) {
                             maxDamage = damage;
                             bestAmmo = entry.key;
                         }
                     }
 
-                    if(bestAmmo != null){
+                    if (bestAmmo != null) {
                         turret.ammo.clear();
                         turret.totalAmmo = 0;
                         turret.handleStack(bestAmmo, block.maxAmmo, null);
                     }
                 });
             }
-        }
-
-
-        @Override
-        public void draw() {
-            super.draw();
-
-            Draw.color(Tmp.c1.set(Color.blue).shiftHue(Time.time));
-
-            float size = this.block.size * 8f / 2f;
-            float duration = 100f;
-
-            if (ScissorStack.push(Tmp.r1.setCentered(x, y, size * 2f))) {
-                for (int i = 0; i < 2; i++) {
-                    float time = (Time.time + (i * duration / 2f)) % duration;
-                    float progress = time / duration;
-
-                    float lx = Mathf.lerp(-size, size, progress);
-                    float ly = Mathf.lerp(size, -size, progress);
-
-                    Lines.stroke(3f);
-                    Lines.line(x + lx - size, y + ly - size, x + lx + size, y + ly + size);
-                }
-                ScissorStack.pop();
-            }
-
-            Draw.reset();
         }
     }
 }
