@@ -4,6 +4,7 @@ import arc.math.Mathf;
 import arc.struct.ObjectFloatMap;
 import arc.util.Time;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.bullet.RailBulletType;
 import mindustry.entities.bullet.ShrapnelBulletType;
 import mindustry.world.blocks.defense.OverdriveProjector;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
@@ -65,12 +66,16 @@ public class RangeDome extends OverdriveProjector {
                         for (var entry : itemTurret.ammoTypes) {
                             BulletType bullet = entry.value;
 
-                            if (bullet instanceof ShrapnelBulletType) {
-                                ShrapnelBulletType shrapnel = (ShrapnelBulletType) bullet;
+                            if (bullet instanceof ShrapnelBulletType bulletType) {
                                 if (!originalLengths.containsKey(bullet)) {
-                                    originalLengths.put(bullet, shrapnel.length);
+                                    originalLengths.put(bullet, bulletType.length);
                                 }
-                                shrapnel.length = originalLengths.get(bullet, shrapnel.length) * multiplier;
+                                bulletType.length = originalLengths.get(bullet, bulletType.length) * multiplier;
+                            } else if (bullet instanceof RailBulletType bulletType) {
+                                if (!originalLengths.containsKey(bullet)) {
+                                    originalLengths.put(bullet, bulletType.length);
+                                }
+                                bulletType.length = originalLengths.get(bullet, bulletType.length) * multiplier;
                             } else {
                                 if (!originalLifetimes.containsKey(bullet)) {
                                     originalLifetimes.put(bullet, bullet.lifetime);
