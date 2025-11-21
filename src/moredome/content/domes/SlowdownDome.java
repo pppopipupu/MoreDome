@@ -1,14 +1,8 @@
-package moredome.content;
+package moredome.content.domes;
 
 import arc.math.Mathf;
-import arc.util.Pack;
 import arc.util.Time;
-import mindustry.gen.Building;
-import mindustry.logic.Ranged;
-import mindustry.world.Block;
 import mindustry.world.blocks.defense.OverdriveProjector;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import static mindustry.Vars.indexer;
 

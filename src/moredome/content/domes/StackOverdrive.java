@@ -1,4 +1,4 @@
-package moredome.content;
+package moredome.content.domes;
 
 import arc.math.geom.Geometry;
 import arc.graphics.*;
