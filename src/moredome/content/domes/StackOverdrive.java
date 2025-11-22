@@ -48,8 +48,8 @@ public class StackOverdrive extends OverdriveProjector {
                 float realRange = range + phaseHeat * phaseRangeBoost;
                 charge = 0f;
                 AtomicReference<Float> boost = new AtomicReference<>(realBoost());
-                indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof StackOverdriveBuild && other != this, other -> {
-                    boost.set(boost.get() + ((StackOverdriveBuild) other).realBoost());
+                indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> {
+                    boost.set(boost.get() + ((OverdriveBuild) other).realBoost());
                 });
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> {
