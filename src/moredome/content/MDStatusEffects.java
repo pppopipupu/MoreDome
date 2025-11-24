@@ -7,10 +7,10 @@ public class MDStatusEffects{
 
     public static void load(){
         unitOverdrive = new StatusEffect("unit-overdrive"){{
-            speedMultiplier = 3f;
-            damageMultiplier = 3f;
-            reloadMultiplier = 3f;
-            buildSpeedMultiplier = 3f;
+            speedMultiplier *= 3f;
+            damageMultiplier *= 3f;
+            reloadMultiplier *= 3f;
+            buildSpeedMultiplier *= 3f;
         }};
     }
 }
