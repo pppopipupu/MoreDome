@@ -6,18 +6,20 @@ import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
 import moredome.content.MDBlocks;
+import moredome.content.MDStatusEffects;
+import moredome.content.MDUnitTypes;
 
 public class MoreDome extends Mod{
 
     public MoreDome(){
-        Log.info("Loaded ExampleJavaMod constructor.");
 
-        //listen for game load event
     }
 
     @Override
     public void loadContent(){
         MDBlocks.load();
+        MDStatusEffects.load();
+        MDUnitTypes.load();
     }
 
 }

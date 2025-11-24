@@ -18,6 +18,7 @@ public class RangeDome extends OverdriveProjector {
     private static final ObjectFloatMap<BulletType> originalHitSizes = new ObjectFloatMap<>();
     private static final ObjectFloatMap<BulletType> originalDrawSizes = new ObjectFloatMap<>();
     private static final ObjectFloatMap<BulletType> originalLengths = new ObjectFloatMap<>();
+
     public RangeDome(String name) {
         super(name);
         range = 300f;
@@ -53,11 +54,12 @@ public class RangeDome extends OverdriveProjector {
                     if (!originalRanges.containsKey(block)) {
                         originalRanges.put(block, block.range);
                     }
+                    float multiplier = switch (block.name) {
+                        case "fuse" -> 4.0f;
+                        case "scorch" -> 8.0f;
+                        default -> 2.0f;
+                    };
 
-                    float multiplier = 2.0f;
-                    if (block.name.equals("fuse")) {
-                        multiplier = 5.0f;
-                    }
 
                     block.range = originalRanges.get(block, block.range) * multiplier;
 

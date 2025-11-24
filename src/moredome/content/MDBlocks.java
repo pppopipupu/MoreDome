@@ -16,7 +16,7 @@ public class MDBlocks {
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
-            requirements(Category.effect, with(Items.copper, 200, Items.lead, 200, Items.titanium, 130, Items.silicon, 130, Items.plastanium, 80, Items.surgeAlloy, 200));
+            requirements(Category.effect, with(Items.copper, 200, Items.lead, 200, Items.titanium, 130, Items.silicon, 130, Items.plastanium, 500, Items.surgeAlloy, 300,Items.sporePod,100));
             consumeItem(Items.surgeAlloy).boost();
             consumePower(19.084f);
             range = 400f;
@@ -34,7 +34,7 @@ public class MDBlocks {
             consumePower(10f);
         }};
         rangeDome = new RangeDome("range-dome") {{
-            requirements(Category.effect, with( Items.titanium,100,Items.silicon,80,Items.thorium,50,Items.plastanium,30));
+            requirements(Category.effect, with( Items.titanium,100,Items.silicon,80,Items.thorium,50,Items.plastanium,100,Items.surgeAlloy,2000,Items.phaseFabric,1000));
             size = 4;
             consumePower(4f);
         }};
