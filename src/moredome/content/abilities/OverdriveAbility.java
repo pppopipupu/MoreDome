@@ -16,7 +16,7 @@ import mindustry.graphics.Layer;
 import moredome.content.MDStatusEffects;
 
 public class OverdriveAbility extends Ability {
-    public float range = 250f;
+    public float range = 300f;
     public float speedBoost = 3.0f;
     public float reload = 60f;
     public float charge = 0f;

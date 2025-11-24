@@ -1,6 +1,7 @@
 package moredome.content;
 
 
+import mindustry.gen.LegsUnit;
 import mindustry.gen.Legsc;
 import mindustry.gen.UnitEntity;
 import mindustry.gen.Unitc;
@@ -13,15 +14,17 @@ public class MDUnitTypes {
 
     public static void load() {
         mobileOverdrive = new UnitType("mobile-overdrive") {{
-            speed = 2.0f;
-
+            speed = 1.0f;
+            legCount = 5;
+            legLength = 40;
+            legSpeed = 1.0f;
             allowLegStep = true;
             groundLayer = Layer.legUnit;
-            constructor = UnitEntity::create;
+            constructor = LegsUnit::create;
             abilities.add(new OverdriveAbility());
             health = 800;
             armor = 40f;
-            hitSize = 13f;
+            hitSize = 20f;
         }};
     }
 }

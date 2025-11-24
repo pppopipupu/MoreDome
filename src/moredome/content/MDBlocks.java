@@ -4,15 +4,12 @@ import mindustry.content.Items;
 import mindustry.type.Category;
 import mindustry.type.Item;
 import mindustry.world.Block;
-import moredome.content.domes.AmmoDome;
-import moredome.content.domes.RangeDome;
-import moredome.content.domes.SlowdownDome;
-import moredome.content.domes.StackOverdrive;
+import moredome.content.domes.*;
 
 import static mindustry.type.ItemStack.with;
 
 public class MDBlocks {
-    public static Block stackOverdrive,slowdownDome,ammoDome,rangeDome;
+    public static Block stackOverdrive,slowdownDome,ammoDome,rangeDome,mobileOverdrive;
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
@@ -37,6 +34,10 @@ public class MDBlocks {
             requirements(Category.effect, with( Items.titanium,100,Items.silicon,80,Items.thorium,50,Items.plastanium,100,Items.surgeAlloy,2000,Items.phaseFabric,1000));
             size = 4;
             consumePower(4f);
+        }};
+        mobileOverdrive = new MobileOverdrive("mobile-overdrive-block") {{
+           requirements(Category.units,with(Items.surgeAlloy,800));
+           size = 1;
         }};
 
     }
