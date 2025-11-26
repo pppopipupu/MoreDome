@@ -25,18 +25,18 @@ public class MDBlocks {
             outputsPower = true;
         }};
         ammoDome = new AmmoDome("ammo-dome") {{
-            requirements(Category.effect, with(Items.lead,20, Items.titanium,10,Items.silicon,10,Items.sporePod,200));
+            requirements(Category.effect, with(Items.lead,20, Items.titanium,10,Items.silicon,10,Items.sporePod,200,Items.blastCompound,100));
             size = 3;
             consumeItem(Items.copper,50);
             consumePower(10f);
         }};
         rangeDome = new RangeDome("range-dome") {{
-            requirements(Category.effect, with( Items.titanium,100,Items.silicon,80,Items.thorium,50,Items.plastanium,100,Items.surgeAlloy,2000,Items.phaseFabric,1000));
+            requirements(Category.effect, with( Items.sporePod,9999));
             size = 4;
             consumePower(4f);
         }};
         mobileOverdrive = new MobileOverdrive("mobile-overdrive-block") {{
-           requirements(Category.units,with(Items.surgeAlloy,800));
+           requirements(Category.units,with(Items.surgeAlloy,1000));
            size = 1;
         }};
 

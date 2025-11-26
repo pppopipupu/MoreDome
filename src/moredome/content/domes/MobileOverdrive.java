@@ -1,5 +1,6 @@
 package moredome.content.domes;
 
+import mindustry.content.Items;
 import mindustry.gen.Building;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
@@ -23,6 +24,7 @@ public class MobileOverdrive extends Block {
             Unit u = MDUnitTypes.mobileOverdrive.create(team);
 
             u.set(x, y);
+            u.addItem(Items.blastCompound,500);
             u.add();
 
             kill();

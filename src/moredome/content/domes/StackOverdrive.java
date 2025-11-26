@@ -5,9 +5,13 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.util.*;
+import mindustry.entities.Units;
 import mindustry.graphics.*;
 import mindustry.world.blocks.defense.OverdriveProjector;
+import moredome.content.MDStatusEffects;
+import moredome.content.abilities.OverdriveAbility;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static mindustry.Vars.*;
@@ -49,7 +53,13 @@ public class StackOverdrive extends OverdriveProjector {
                 charge = 0f;
                 AtomicReference<Float> boost = new AtomicReference<>(realBoost());
                 indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> {
-                    boost.set(boost.get() + ((OverdriveBuild) other).realBoost());
+                    boost.set(boost.get() + ((OverdriveBuild) other).realBoost() - 1.0f);
+                });
+
+                Units.nearby(this.team, this.x, this.y, range, unit -> {
+                    if (Arrays.stream(unit.abilities).anyMatch(ability -> ability instanceof OverdriveAbility))
+                        boost.set(boost.get() + 2.0f);
+
                 });
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> {
@@ -84,7 +94,7 @@ public class StackOverdrive extends OverdriveProjector {
         public void draw() {
             super.draw();
             Color rainbow = Tmp.c1.set(Color.red).shiftHue(Time.time);
-            for(int i = 50;i<201;i+= 50) {
+            for (int i = 50; i < 201; i += 50) {
                 float f = 1f - (Time.time / i) % 1f;
 
 

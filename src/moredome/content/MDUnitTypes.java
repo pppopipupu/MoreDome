@@ -14,10 +14,10 @@ public class MDUnitTypes {
 
     public static void load() {
         mobileOverdrive = new UnitType("mobile-overdrive") {{
-            speed = 1.0f;
+            speed = 1.2f;
             legCount = 5;
             legLength = 40;
-            legSpeed = 1.0f;
+            legSpeed = 1.2f;
             allowLegStep = true;
             groundLayer = Layer.legUnit;
             constructor = LegsUnit::create;
@@ -25,6 +25,7 @@ public class MDUnitTypes {
             health = 800;
             armor = 40f;
             hitSize = 20f;
+            itemCapacity = 500;
         }};
     }
 }
