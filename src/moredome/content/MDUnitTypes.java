@@ -28,10 +28,10 @@ public class MDUnitTypes {
         }};
 
         evilOverdrive = new UnitType("evil-overdrive") {{
-            speed = 1.5f;
+            speed = 3f;
             legCount = 3;
             legLength = 40;
-            legSpeed = 1.5f;
+            legSpeed = 3f;
             allowLegStep = true;
             groundLayer = Layer.legUnit;
             constructor = LegsUnit::create;
