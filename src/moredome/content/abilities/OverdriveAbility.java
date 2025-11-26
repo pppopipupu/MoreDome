@@ -5,6 +5,7 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.math.Mathf;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
@@ -20,28 +21,35 @@ public class OverdriveAbility extends Ability {
     public float speedBoost = 3.0f;
     public float reload = 60f;
     public float charge = 0f;
-    public OverdriveAbility(float range, float speedBoost){
-        this.range = range;
-        this.speedBoost = speedBoost;
+    public final boolean isEvil;
+
+    public OverdriveAbility(boolean isEvil) {
+        this.isEvil = isEvil;
     }
 
-    public OverdriveAbility(){
+    public OverdriveAbility() {
+        isEvil = false;
     }
 
     @Override
-    public void update(Unit unit){
+    public void update(Unit unit) {
         charge += Time.delta;
 
-        if(charge >= reload){
+        if (charge >= reload) {
             charge = 0f;
+            if (!isEvil) {
+                Units.nearby(unit.team, unit.x, unit.y, range, u -> {
+                    u.apply(MDStatusEffects.unitOverdrive, reload + 1f);
+                });
 
-            Units.nearby(unit.team, unit.x, unit.y, range, u -> {
-                u.apply(MDStatusEffects.unitOverdrive, reload + 1f);
-            });
-
-            Vars.indexer.eachBlock(unit, range, other -> other.block.canOverdrive, other -> {
-                other.applyBoost(speedBoost, reload + 1f);
-            });
+                Vars.indexer.eachBlock(unit, range, other -> other.block.canOverdrive, other -> {
+                    other.applyBoost(speedBoost, reload + 1f);
+                });
+            } else {
+                Units.nearbyEnemies(unit.team, unit.x, unit.y, range, u -> {
+                    u.apply(MDStatusEffects.unitYangwei, reload * 5);
+                });
+            }
         }
     }
 
@@ -52,8 +60,12 @@ public class OverdriveAbility extends Ability {
         Draw.z(Layer.effect);
 
         Lines.stroke(2f);
-        Draw.color(Tmp.c1.set(Color.red).shiftHue(Time.time * 2f));
-
+        if(!isEvil) {
+            Draw.color(Tmp.c1.set(Color.red).shiftHue(Time.time * 2f));
+        }
+        else {
+            Draw.color(Color.black);
+        }
         float radius = unit.hitSize * 1.5f;
 
         for(int i = 0; i < 3; i++){
@@ -67,4 +79,5 @@ public class OverdriveAbility extends Ability {
             Drawf.dashCircle(unit.x, unit.y, range, Color.blue);
         }
     }
+
 }

@@ -19,7 +19,6 @@ public class AmmoDome extends OverdriveProjector {
     public AmmoDome(String name) {
         super(name);
         range = 200f;
-        reload = 120f;
         speedBoost = 1.0f;
         hasBoost = false;
         itemCapacity = 200;
@@ -53,7 +52,8 @@ public class AmmoDome extends OverdriveProjector {
                     float maxDamage = -1f;
 
                     for (var entry : block.ammoTypes.entries()) {
-                        float damage = entry.value.damage;
+                        //现在看dps了
+                        float damage = entry.value.damage * entry.value.speed;
                         if (damage > maxDamage) {
                             maxDamage = damage;
                             bestAmmo = entry.key;

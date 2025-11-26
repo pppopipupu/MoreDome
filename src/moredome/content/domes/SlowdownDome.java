@@ -29,7 +29,7 @@ public class SlowdownDome extends OverdriveProjector {
                 power = 0f;
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive && other != this && other.power != null && other.block.consPower != null
-                          && other.shouldConsumePower, other -> {
+                          && other.shouldConsumePower && other.timeScale() <= 1.0f, other -> {
                     other.applySlowdown(0.6f, reload + 1F);
                     power += other.block.consPower.usage * other.timeScale();
 
