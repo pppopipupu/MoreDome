@@ -20,7 +20,7 @@ import static mindustry.Vars.indexer;
 public class LiquidDome extends OverdriveProjector {
     public LiquidDome(String name) {
         super(name);
-        range = 300f;
+        range = 200f;
         speedBoost = 1.0f;
         hasBoost = false;
         liquidCapacity = 1000;

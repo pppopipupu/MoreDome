@@ -11,7 +11,7 @@ import moredome.content.domes.*;
 import static mindustry.type.ItemStack.with;
 
 public class MDBlocks {
-    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive, liquidDome;
+    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive,evilOverdrive, liquidDome;
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
@@ -41,7 +41,7 @@ public class MDBlocks {
             requirements(Category.units, with(Items.surgeAlloy, 1000));
             size = 1;
         }};
-        mobileOverdrive = new MobileOverdrive("evil-overdrive-block",true) {{
+        evilOverdrive = new MobileOverdrive("evil-overdrive-block",true) {{
             requirements(Category.units, with(Items.surgeAlloy, 600,Items.blastCompound,200));
             size = 1;
         }};

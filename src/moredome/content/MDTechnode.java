@@ -19,9 +19,10 @@ public class MDTechnode
     public static void load(){
         addToNode(Blocks.overdriveDome, ()-> node(MDBlocks.stackOverdrive));
         addToNode(Blocks.powerNode,()-> node(MDBlocks.slowdownDome));
-        addToNode(Blocks.meltdown,()-> node(MDBlocks.mobileOverdrive));
-        addToNode(Blocks.malign,()-> node(MDBlocks.mobileOverdrive));
-        addToNode(Blocks.duo,()->node(MDBlocks.ammoDome));
+        addToNode(Blocks.meltdown,()-> node(MDBlocks.mobileOverdrive, ()-> node(MDBlocks.evilOverdrive)));
+        addToNode(Blocks.malign,()-> node(MDBlocks.mobileOverdrive, ()-> node(MDBlocks.evilOverdrive)));
+        addToNode(Blocks.duo,()->node(MDBlocks.ammoDome, ()-> node(MDBlocks.liquidDome)));
+
 
     }
     //从更多实用设备偷来的
