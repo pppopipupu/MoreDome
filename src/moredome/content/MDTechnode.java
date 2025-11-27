@@ -17,10 +17,11 @@ public class MDTechnode
     public static Seq<TechTree.TechNode> all = new Seq();
     public static Seq<TechTree.TechNode> roots = new Seq();
     public static void load(){
-        addToNode(Blocks.overdriveDome, ()-> node(MDBlocks.stackOverdrive));
+        addToNode(Blocks.overdriveDome, ()-> node(MDBlocks.stackOverdrive,() -> node(MDBlocks.productivityDome)));
         addToNode(Blocks.powerNode,()-> node(MDBlocks.slowdownDome));
         addToNode(Blocks.meltdown,()-> node(MDBlocks.mobileOverdrive, ()-> node(MDBlocks.evilOverdrive)));
         addToNode(Blocks.malign,()-> node(MDBlocks.mobileOverdrive, ()-> node(MDBlocks.evilOverdrive)));
+        addToNode(Blocks.malign,()-> node(MDBlocks.productivityDome));
         addToNode(Blocks.duo,()->node(MDBlocks.ammoDome, ()-> node(MDBlocks.liquidDome)));
 
 
