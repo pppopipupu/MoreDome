@@ -130,7 +130,6 @@ public class ProductivityDome extends Block {
                     Sounds.beam.at(x, y);
                     Team bulletTeam = (this.team == Team.crux) ? Team.sharded : Team.crux;
                     ContinuousLaserBulletType meltDown = (ContinuousLaserBulletType) ((PowerTurret) Blocks.meltdown).shootType;
-                    meltDown.damage = 11.45f;
                     meltDown.create(this, bulletTeam, x, y, Angles.angle(x, y, other.x, other.y));
                 });
                 indexer.eachBlock(this, range, other -> other instanceof GenericCrafter.GenericCrafterBuild, other -> {
