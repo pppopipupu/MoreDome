@@ -49,10 +49,10 @@ public class MDBlocks {
             requirements(Category.effect, with(Items.metaglass, 450, Items.surgeAlloy, 100));
             size = 3;
             consumeLiquid(Liquids.oil, 0.25f);
-            consumeLiquid(Liquids.cryofluid, 0.5f);
+            consumeLiquid(Liquids.cryofluid, 1.0f);
         }};
         productivityDome = new ProductivityDome("productivity-dome") {{
-            requirements(Category.effect,with( Items.phaseFabric, 400, Items.surgeAlloy, 200));
+            requirements(Category.effect,with( Items.phaseFabric, 450, Items.surgeAlloy, 500));
             size = 3;
             consumePower(12f);
         }};
