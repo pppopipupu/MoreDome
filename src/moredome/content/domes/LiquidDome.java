@@ -35,7 +35,7 @@ public class LiquidDome extends OverdriveProjector {
             super.draw();
             Random random = new Random();
             if (totalLiquid != null) {
-                Draw.color(totalLiquid.color, Color.white, 1f);
+                Draw.color(totalLiquid.color, Color.white, 0.1f);
                 Fill.circle(x + random.nextFloat() * 4 - 2f, y + random.nextFloat() * 4 - 2f, 5f);
             }
             Draw.reset();

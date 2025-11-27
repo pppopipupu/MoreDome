@@ -9,6 +9,7 @@ import arc.math.Mathf;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
+import mindustry.content.StatusEffects;
 import mindustry.entities.Units;
 import mindustry.entities.abilities.Ability;
 import mindustry.gen.Unit;
@@ -41,6 +42,10 @@ public class OverdriveAbility extends Ability {
                 Units.nearby(unit.team, unit.x, unit.y, range, u -> {
                     u.apply(MDStatusEffects.unitOverdrive, reload + 1f);
                 });
+                //对敌方单位进行一个较弱的超
+                Units.nearbyEnemies(unit.team, unit.x, unit.y, range, u -> {
+                    u.apply(StatusEffects.overdrive, reload +1f);
+                });
 
                 Vars.indexer.eachBlock(unit, range, other -> other.block.canOverdrive, other -> {
                     other.applyBoost(speedBoost, reload + 1f);
@@ -48,6 +53,9 @@ public class OverdriveAbility extends Ability {
             } else {
                 Units.nearbyEnemies(unit.team, unit.x, unit.y, range, u -> {
                     u.apply(MDStatusEffects.unitYangwei, reload * 5);
+                });
+                Units.nearby(unit.team, unit.x, unit.y, range, u -> {
+                    u.apply(StatusEffects.slow, reload + 1f);
                 });
             }
         }

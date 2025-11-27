@@ -11,7 +11,7 @@ import moredome.content.domes.*;
 import static mindustry.type.ItemStack.with;
 
 public class MDBlocks {
-    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive,evilOverdrive, liquidDome;
+    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive,evilOverdrive, liquidDome,productivityDome;
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
@@ -50,6 +50,11 @@ public class MDBlocks {
             size = 3;
             consumeLiquid(Liquids.oil, 0.25f);
             consumeLiquid(Liquids.cryofluid, 0.5f);
+        }};
+        productivityDome = new ProductivityDome("productivity-dome") {{
+            requirements(Category.effect,with( Items.phaseFabric, 400, Items.surgeAlloy, 200));
+            size = 3;
+            consumePower(12f);
         }};
 
     }
