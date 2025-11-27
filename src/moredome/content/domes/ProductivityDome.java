@@ -32,7 +32,7 @@ import static mindustry.Vars.*;
 import static mindustry.Vars.tilesize;
 
 public class ProductivityDome extends Block {
-    public float reload = 60f;
+    public float reload = 20f;
     public float range = 250f;
     public float minRange = 70f;
     public float useTime = 400f;
