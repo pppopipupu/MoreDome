@@ -1,5 +1,6 @@
 package moredome.content.domes;
 
+import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -13,28 +14,31 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.content.Blocks;
 import mindustry.entities.bullet.ContinuousLaserBulletType;
+import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.gen.Sounds;
+import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.logic.Ranged;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
+import mindustry.world.blocks.payloads.UnitPayload;
 import mindustry.world.blocks.production.GenericCrafter;
+import mindustry.world.blocks.units.Reconstructor;
+import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.meta.*;
-
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
-
 import static mindustry.Vars.*;
-import static mindustry.Vars.tilesize;
 
 public class ProductivityDome extends Block {
     public float reload = 20f;
-    public float range = 250f;
-    public float minRange = 70f;
+    public float range = 285f;
+    public float minRange = 80f;
     public float useTime = 400f;
 
     public ProductivityDome(String name) {
@@ -49,6 +53,7 @@ public class ProductivityDome extends Block {
         lightRadius = 100f;
         envEnabled |= Env.space;
         health = 30000;
+        clipSize = range*2f;
     }
 
     @Override
@@ -99,26 +104,92 @@ public class ProductivityDome extends Block {
                     Map.Entry<Building, Float> entry = it.next();
                     Building build = entry.getKey();
 
-                    if (build instanceof GenericCrafter.GenericCrafterBuild crafter && crafter.isValid() && crafter.enabled) {
-                        float remaining = entry.getValue() - crafter.edelta();
+                    if (!build.isValid() || !build.enabled) {
+                        it.remove();
+                        continue;
+                    }
+
+                    float baseTime = 60f;
+                    boolean active = true;
+
+                    if (build instanceof GenericCrafter.GenericCrafterBuild c) {
+                        baseTime = ((GenericCrafter) c.block).craftTime;
+                    } else if (build instanceof UnitFactory.UnitFactoryBuild u) {
+                        if (u.currentPlan == -1) active = false;
+                        else baseTime = ((UnitFactory) u.block).plans.get(u.currentPlan).time;
+                    } else if (build instanceof Reconstructor.ReconstructorBuild r) {
+                        if (!r.constructing()) active = false;
+                        else baseTime = ((Reconstructor) r.block).constructTime;
+                    } else {
+                        it.remove();
+                        continue;
+                    }
+
+                    if (active) {
+                        float remaining = entry.getValue() - build.edelta();
 
                         if (remaining <= 0) {
-                            GenericCrafter block = (GenericCrafter) crafter.block;
+                            if (build instanceof GenericCrafter.GenericCrafterBuild c) {
+                                GenericCrafter block = (GenericCrafter) c.block;
+                                if (block.outputItem != null) c.items.add(block.outputItem.item, block.outputItem.amount);
+                                if (block.outputLiquid != null) c.liquids.add(block.outputLiquid.liquid, block.outputLiquid.amount);
+                            } else if (build instanceof UnitFactory.UnitFactoryBuild u) {
+                                UnitType type = ((UnitFactory) u.block).plans.get(u.currentPlan).unit;
+                                Unit unit = type.create(u.team);
+                                if (unit != null) {
+                                    UnitPayload p = new UnitPayload(unit);
+                                    float off = (u.block.size * tilesize) / 2f + tilesize / 2f;
+                                    Tmp.v1.trns(u.rotation * 90f, off);
+                                    Building front = world.buildWorld(u.x + Tmp.v1.x, u.y + Tmp.v1.y);
 
-                            if (block.outputItem != null) {
-                                crafter.items.add(block.outputItem.item, block.outputItem.amount);
+                                    if (front != null && front.team == u.team && front.acceptPayload(u, p)) {
+                                        front.handlePayload(u, p);
+                                    } else {
+                                        float spawnOff = (u.block.size * tilesize) / 2f + 2f;
+                                        Tmp.v1.trns(u.rotation * 90f, spawnOff);
+                                        unit.set(u.x + Tmp.v1.x, u.y + Tmp.v1.y);
+                                        unit.rotation = u.rotation * 90f;
+                                        unit.add();
+                                        Events.fire(new EventType.UnitCreateEvent(unit, u));
+                                    }
+                                }
+                            } else if (build instanceof Reconstructor.ReconstructorBuild r) {
+                                if (r.payload != null && r.payload.unit != null) {
+                                    UnitType target = null;
+                                    Reconstructor block = (Reconstructor) r.block;
+                                    for (UnitType[] upgrade : block.upgrades) {
+                                        if (upgrade[0] == r.payload.unit.type) {
+                                            target = upgrade[1];
+                                            break;
+                                        }
+                                    }
+                                    if (target != null) {
+                                        Unit unit = target.create(r.team);
+                                        if (unit != null) {
+                                            UnitPayload p = new UnitPayload(unit);
+                                            float off = (r.block.size * tilesize) / 2f + tilesize / 2f;
+                                            Tmp.v1.trns(r.rotation * 90f, off);
+                                            Building front = world.buildWorld(r.x + Tmp.v1.x, r.y + Tmp.v1.y);
+
+                                            if (front != null && front.team == r.team && front.acceptPayload(r, p)) {
+                                                front.handlePayload(r, p);
+                                            } else {
+                                                float spawnOff = (r.block.size * tilesize) / 2f + 2f;
+                                                Tmp.v1.trns(r.rotation * 90f, spawnOff);
+                                                unit.set(r.x + Tmp.v1.x, r.y + Tmp.v1.y);
+                                                unit.rotation = r.rotation * 90f;
+                                                unit.add();
+                                                Events.fire(new EventType.UnitCreateEvent(unit, r));
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
-                            if (block.outputLiquid != null) {
-                                crafter.liquids.add(block.outputLiquid.liquid, block.outputLiquid.amount);
-                            }
-
-                            entry.setValue(block.craftTime * 1.5f);
+                            entry.setValue(baseTime * 1.5f);
                         } else {
                             entry.setValue(remaining);
                         }
-                    } else {
-                        it.remove();
                     }
                 }
             }
@@ -132,11 +203,24 @@ public class ProductivityDome extends Block {
                     ContinuousLaserBulletType meltDown = (ContinuousLaserBulletType) ((PowerTurret) Blocks.meltdown).shootType;
                     meltDown.create(this, bulletTeam, x, y, Angles.angle(x, y, other.x, other.y));
                 });
-                indexer.eachBlock(this, range, other -> other instanceof GenericCrafter.GenericCrafterBuild, other -> {
-                    if (!productBuildings.containsKey(other)) {
-                        productBuildings.put(other, ((GenericCrafter) other.block).craftTime * 1.5f);
-                    }
-                });
+                indexer.eachBlock(this, range, other ->
+                                (other instanceof GenericCrafter.GenericCrafterBuild ||
+                                        other instanceof UnitFactory.UnitFactoryBuild ||
+                                        other instanceof Reconstructor.ReconstructorBuild) && other.enabled,
+                        other -> {
+                            if (!productBuildings.containsKey(other)) {
+                                float time = 60f;
+                                if (other instanceof GenericCrafter.GenericCrafterBuild c) {
+                                    time = ((GenericCrafter) c.block).craftTime;
+                                } else if (other instanceof UnitFactory.UnitFactoryBuild u) {
+                                    if (u.currentPlan != -1) time = ((UnitFactory) u.block).plans.get(u.currentPlan).time;
+                                } else if (other instanceof Reconstructor.ReconstructorBuild r) {
+                                    time = ((Reconstructor) r.block).constructTime;
+                                }
+
+                                productBuildings.put(other, time * 1.5f);
+                            }
+                        });
             }
 
 
@@ -166,19 +250,34 @@ public class ProductivityDome extends Block {
             Draw.alpha(1f);
             Lines.stroke((2f * f + 0.1f) * heat);
 
-            float r = Math.max(0f, Mathf.clamp(2f - f * 2f) * size * tilesize / 2f - f - 0.2f), w = Mathf.clamp(0.5f - f) * size * tilesize;
+            float ro = Math.max(0f, Mathf.clamp(2f - f * 2f) * size * tilesize / 2f - f - 0.2f), w = Mathf.clamp(0.5f - f) * size * tilesize;
             Lines.beginLine();
             for (int i = 0; i < 4; i++) {
-                Lines.linePoint(x + Geometry.d4(i).x * r + Geometry.d4(i).y * w, y + Geometry.d4(i).y * r - Geometry.d4(i).x * w);
+                Lines.linePoint(x + Geometry.d4(i).x * ro + Geometry.d4(i).y * w, y + Geometry.d4(i).y * ro - Geometry.d4(i).x * w);
                 if (f < 0.5f)
-                    Lines.linePoint(x + Geometry.d4(i).x * r - Geometry.d4(i).y * w, y + Geometry.d4(i).y * r + Geometry.d4(i).x * w);
+                    Lines.linePoint(x + Geometry.d4(i).x * ro - Geometry.d4(i).y * w, y + Geometry.d4(i).y * ro + Geometry.d4(i).x * w);
             }
             Lines.endLine(true);
+
             for(Map.Entry<Building, Float> entry : productBuildings.entrySet()){
                 Building target = entry.getKey();
                 if(target == null || !target.isValid()) continue;
 
-                float maxTime = ((GenericCrafter)target.block).craftTime * 1.5f;
+                float maxTime = 1f;
+                boolean isUnitBuilding = false;
+
+                if (target instanceof GenericCrafter.GenericCrafterBuild c) {
+                    maxTime = ((GenericCrafter) c.block).craftTime;
+                } else if (target instanceof UnitFactory.UnitFactoryBuild u) {
+                    if (u.currentPlan == -1) continue;
+                    maxTime = ((UnitFactory) u.block).plans.get(u.currentPlan).time;
+                    isUnitBuilding = true;
+                } else if (target instanceof Reconstructor.ReconstructorBuild r) {
+                    maxTime = ((Reconstructor) r.block).constructTime;
+                    isUnitBuilding = true;
+                }
+
+                maxTime *= 1.5f;
                 float progress = Mathf.clamp(1f - (entry.getValue() / maxTime));
 
                 float width = target.block.size * tilesize * 0.8f;
@@ -190,10 +289,14 @@ public class ProductivityDome extends Block {
                 Draw.color(Color.black);
                 Fill.rect(target.x, target.y - yOffset, width, height);
 
-                Draw.color(Color.gold);
+                if (isUnitBuilding) {
+                    Draw.color(Tmp.c1.set(Color.red).shiftHue(Time.time * 2f));
+                } else {
+                    Draw.color(Color.gold);
+                }
+
                 Fill.rect(target.x - (width * (1f - progress)) / 2f, target.y - yOffset, width * progress, height);
             }
-
             Draw.reset();
         }
 

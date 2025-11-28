@@ -54,7 +54,7 @@ public class MDBlocks {
         productivityDome = new ProductivityDome("productivity-dome") {{
             requirements(Category.effect,with( Items.phaseFabric, 450, Items.surgeAlloy, 500));
             size = 3;
-            consumePower(12f);
+            consumePower(18f);
         }};
 
     }
