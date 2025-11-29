@@ -30,15 +30,17 @@ import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.meta.*;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+
 import static mindustry.Vars.*;
 
 public class ProductivityDome extends Block {
     public float reload = 20f;
     public float range = 285f;
-    public float minRange = 80f;
+    public float minRange = 75f;
     public float useTime = 400f;
 
     public ProductivityDome(String name) {
@@ -53,7 +55,7 @@ public class ProductivityDome extends Block {
         lightRadius = 100f;
         envEnabled |= Env.space;
         health = 30000;
-        clipSize = range*2f;
+        clipSize = range * 2f;
     }
 
     @Override
@@ -131,8 +133,10 @@ public class ProductivityDome extends Block {
                         if (remaining <= 0) {
                             if (build instanceof GenericCrafter.GenericCrafterBuild c) {
                                 GenericCrafter block = (GenericCrafter) c.block;
-                                if (block.outputItem != null) c.items.add(block.outputItem.item, block.outputItem.amount);
-                                if (block.outputLiquid != null) c.liquids.add(block.outputLiquid.liquid, block.outputLiquid.amount);
+                                if (block.outputItem != null)
+                                    c.items.add(block.outputItem.item, block.outputItem.amount);
+                                if (block.outputLiquid != null)
+                                    c.liquids.add(block.outputLiquid.liquid, block.outputLiquid.amount);
                             } else if (build instanceof UnitFactory.UnitFactoryBuild u) {
                                 UnitType type = ((UnitFactory) u.block).plans.get(u.currentPlan).unit;
                                 Unit unit = type.create(u.team);
@@ -213,7 +217,8 @@ public class ProductivityDome extends Block {
                                 if (other instanceof GenericCrafter.GenericCrafterBuild c) {
                                     time = ((GenericCrafter) c.block).craftTime;
                                 } else if (other instanceof UnitFactory.UnitFactoryBuild u) {
-                                    if (u.currentPlan != -1) time = ((UnitFactory) u.block).plans.get(u.currentPlan).time;
+                                    if (u.currentPlan != -1)
+                                        time = ((UnitFactory) u.block).plans.get(u.currentPlan).time;
                                 } else if (other instanceof Reconstructor.ReconstructorBuild r) {
                                     time = ((Reconstructor) r.block).constructTime;
                                 }
@@ -259,9 +264,9 @@ public class ProductivityDome extends Block {
             }
             Lines.endLine(true);
 
-            for(Map.Entry<Building, Float> entry : productBuildings.entrySet()){
+            for (Map.Entry<Building, Float> entry : productBuildings.entrySet()) {
                 Building target = entry.getKey();
-                if(target == null || !target.isValid()) continue;
+                if (target == null || !target.isValid()) continue;
 
                 float maxTime = 1f;
                 boolean isUnitBuilding = false;

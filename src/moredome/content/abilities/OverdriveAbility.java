@@ -44,7 +44,7 @@ public class OverdriveAbility extends Ability {
                 });
                 //对敌方单位进行一个较弱的超
                 Units.nearbyEnemies(unit.team, unit.x, unit.y, range, u -> {
-                    u.apply(StatusEffects.overdrive, reload +1f);
+                    u.apply(StatusEffects.overdrive, reload + 1f);
                 });
 
                 Vars.indexer.eachBlock(unit, range, other -> other.block.canOverdrive, other -> {
@@ -62,28 +62,27 @@ public class OverdriveAbility extends Ability {
     }
 
     @Override
-    public void draw(Unit unit){
+    public void draw(Unit unit) {
         super.draw(unit);
 
         Draw.z(Layer.effect);
 
         Lines.stroke(2f);
-        if(!isEvil) {
+        if (!isEvil) {
             Draw.color(Tmp.c1.set(Color.red).shiftHue(Time.time * 2f));
-        }
-        else {
+        } else {
             Draw.color(Color.black);
         }
         float radius = unit.hitSize * 1.5f;
 
-        for(int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             Lines.arc(unit.x, unit.y, radius, 0.25f, Time.time * 3f + (i * 120f));
         }
 
         Draw.reset();
 
         unit.hitbox(Tmp.r1);
-        if(Tmp.r1.contains(Core.input.mouseWorld())){
+        if (Tmp.r1.contains(Core.input.mouseWorld())) {
             Drawf.dashCircle(unit.x, unit.y, range, Color.blue);
         }
     }

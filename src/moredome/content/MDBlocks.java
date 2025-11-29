@@ -30,6 +30,7 @@ public class MDBlocks {
             requirements(Category.effect, with(Items.lead, 20, Items.titanium, 10, Items.silicon, 10, Items.sporePod, 200, Items.blastCompound, 100));
             size = 3;
             consumeItem(Items.copper, 50);
+            consumeItem(Items.surgeAlloy, 5);
             consumePower(10f);
         }};
         rangeDome = new RangeDome("range-dome") {{
@@ -48,13 +49,14 @@ public class MDBlocks {
         liquidDome = new LiquidDome("liquid-dome") {{
             requirements(Category.effect, with(Items.metaglass, 450, Items.surgeAlloy, 100));
             size = 3;
-            consumeLiquid(Liquids.oil, 0.25f);
-            consumeLiquid(Liquids.cryofluid, 1.0f);
+            consumeLiquid(Liquids.oil, 0.5f);
+            consumeLiquid(Liquids.cryofluid, 1.5f);
+            consumePower(12f);
         }};
         productivityDome = new ProductivityDome("productivity-dome") {{
             requirements(Category.effect,with( Items.phaseFabric, 450, Items.surgeAlloy, 500));
             size = 3;
-            consumePower(18f);
+            consumePower(20f);
         }};
 
     }
