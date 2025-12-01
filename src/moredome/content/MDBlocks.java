@@ -3,15 +3,13 @@ package moredome.content;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.type.Category;
-import mindustry.type.Item;
-import mindustry.type.LiquidStack;
 import mindustry.world.Block;
 import moredome.content.domes.*;
 
 import static mindustry.type.ItemStack.with;
 
 public class MDBlocks {
-    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive,evilOverdrive, liquidDome,productivityDome;
+    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive,evilOverdrive, liquidDome,productivityDome,biberyDome;
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
@@ -54,9 +52,14 @@ public class MDBlocks {
             consumePower(12f);
         }};
         productivityDome = new ProductivityDome("productivity-dome") {{
-            requirements(Category.effect,with( Items.phaseFabric, 450, Items.surgeAlloy, 500));
+            requirements(Category.effect,with( Items.phaseFabric, 600, Items.surgeAlloy, 200));
             size = 3;
-            consumePower(20f);
+            consumePower(40f);
+        }};
+        biberyDome = new BriberyDome("bribery-dome") {{
+           requirements(Category.effect,with(  Items.plastanium,200,Items.blastCompound,10));
+           size = 3;
+           consumeItem(Items.surgeAlloy,5);
         }};
 
     }

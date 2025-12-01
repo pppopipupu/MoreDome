@@ -40,8 +40,28 @@ import static mindustry.Vars.*;
 public class ProductivityDome extends Block {
     public float reload = 20f;
     public float range = 285f;
-    public float minRange = 75f;
+    public float minRange = 70f;
     public float useTime = 400f;
+    public float productivity = 1.3f;
+    //兼容新视界，哈哈
+    private static Class<?> jumpGateClass;
+    private static java.lang.reflect.Method jgCanConsume, jgCraftTime, jgFindTiles, jgSpawnUnit;
+    private static java.lang.reflect.Field jgSpawnCount;
+    private static boolean hasJumpGate;
+
+    static {
+        try {
+            jumpGateClass = Class.forName("newhorizon.expand.block.special.JumpGate$JumpGateBuild");
+            jgCanConsume = jumpGateClass.getMethod("canConsume");
+            jgCraftTime = jumpGateClass.getMethod("craftTime");
+            jgFindTiles = jumpGateClass.getMethod("findTiles");
+            jgSpawnUnit = jumpGateClass.getMethod("spawnUnit");
+            jgSpawnCount = jumpGateClass.getField("spawnCount");
+            hasJumpGate = true;
+        } catch (Throwable ignored) {
+            hasJumpGate = false;
+        }
+    }
 
     public ProductivityDome(String name) {
         super(name);
@@ -122,6 +142,17 @@ public class ProductivityDome extends Block {
                     } else if (build instanceof Reconstructor.ReconstructorBuild r) {
                         if (!r.constructing()) active = false;
                         else baseTime = ((Reconstructor) r.block).constructTime;
+                    } else if (hasJumpGate && jumpGateClass.isInstance(build)) {
+                        try {
+                            if (!(boolean) jgCanConsume.invoke(build)) active = false;
+                            else {
+                                float time = (float) jgCraftTime.invoke(build);
+                                int count = jgSpawnCount.getInt(build);
+                                baseTime = time * Mathf.sqrt(count);
+                            }
+                        } catch (Exception e) {
+                            active = false;
+                        }
                     } else {
                         it.remove();
                         continue;
@@ -188,9 +219,17 @@ public class ProductivityDome extends Block {
                                         }
                                     }
                                 }
+                            } else if (hasJumpGate && jumpGateClass.isInstance(build)) {
+                                try {
+                                    jgFindTiles.invoke(build);
+                                    int count = jgSpawnCount.getInt(build);
+                                    for (int i = 0; i < count; i++) jgSpawnUnit.invoke(build);
+                                    build.consume();
+                                } catch (Exception ignored) {
+                                }
                             }
 
-                            entry.setValue(baseTime * 1.5f);
+                            entry.setValue(baseTime * productivity);
                         } else {
                             entry.setValue(remaining);
                         }
@@ -210,7 +249,8 @@ public class ProductivityDome extends Block {
                 indexer.eachBlock(this, range, other ->
                                 (other instanceof GenericCrafter.GenericCrafterBuild ||
                                         other instanceof UnitFactory.UnitFactoryBuild ||
-                                        other instanceof Reconstructor.ReconstructorBuild) && other.enabled,
+                                        other instanceof Reconstructor.ReconstructorBuild ||
+                                        (hasJumpGate && jumpGateClass.isInstance(other))) && other.enabled,
                         other -> {
                             if (!productBuildings.containsKey(other)) {
                                 float time = 60f;
@@ -221,9 +261,17 @@ public class ProductivityDome extends Block {
                                         time = ((UnitFactory) u.block).plans.get(u.currentPlan).time;
                                 } else if (other instanceof Reconstructor.ReconstructorBuild r) {
                                     time = ((Reconstructor) r.block).constructTime;
+                                } else if (hasJumpGate && jumpGateClass.isInstance(other)) {
+                                    try {
+                                        float base = (float) jgCraftTime.invoke(other);
+                                        int count = jgSpawnCount.getInt(other);
+                                        time = base * Mathf.sqrt(count);
+                                    } catch (Exception e) {
+                                        time = 0f;
+                                    }
                                 }
 
-                                productBuildings.put(other, time * 1.5f);
+                                productBuildings.put(other, time * productivity);
                             }
                         });
             }
@@ -280,9 +328,17 @@ public class ProductivityDome extends Block {
                 } else if (target instanceof Reconstructor.ReconstructorBuild r) {
                     maxTime = ((Reconstructor) r.block).constructTime;
                     isUnitBuilding = true;
+                } else if (hasJumpGate && jumpGateClass.isInstance(target)) {
+                    try {
+                        float base = (float) jgCraftTime.invoke(target);
+                        int count = jgSpawnCount.getInt(target);
+                        maxTime = base * Mathf.sqrt(count);
+                    } catch (Exception ignored) {
+                    }
+                    isUnitBuilding = true;
                 }
 
-                maxTime *= 1.5f;
+                maxTime *= productivity;
                 float progress = Mathf.clamp(1f - (entry.getValue() / maxTime));
 
                 float width = target.block.size * tilesize * 0.8f;
