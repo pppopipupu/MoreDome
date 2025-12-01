@@ -32,7 +32,7 @@ public class MobileOverdrive extends Block {
                 u = MDUnitTypes.mobileOverdrive.create(team);
             } else {
                 u = MDUnitTypes.evilOverdrive.create(team);
-                u.addItem(Items.blastCompound,500);
+                u.addItem(Items.blastCompound, 500);
             }
             u.set(x, y);
             u.add();

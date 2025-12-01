@@ -11,8 +11,6 @@ import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
 import mindustry.world.blocks.defense.OverdriveProjector;
 
-import static mindustry.Vars.tilesize;
-
 public class BriberyDome extends OverdriveProjector {
     public BriberyDome(String name) {
         super(name);

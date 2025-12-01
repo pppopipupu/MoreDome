@@ -31,6 +31,8 @@ import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.meta.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -45,8 +47,8 @@ public class ProductivityDome extends Block {
     public float productivity = 1.3f;
     //兼容新视界，哈哈
     private static Class<?> jumpGateClass;
-    private static java.lang.reflect.Method jgCanConsume, jgCraftTime, jgFindTiles, jgSpawnUnit;
-    private static java.lang.reflect.Field jgSpawnCount;
+    private static Method jgCanConsume, jgCraftTime, jgFindTiles, jgSpawnUnit;
+    private static Field jgSpawnCount;
     private static boolean hasJumpGate;
 
     static {
