@@ -38,6 +38,8 @@ public class StackOverdrive extends OverdriveProjector {
     }
 
     public class StackOverdriveBuild extends OverdriveBuild {
+        public float boost = realBoost();
+
         @Override
         public void updateTile() {
             smoothEfficiency = Mathf.lerpDelta(smoothEfficiency, efficiency, 0.08f);
@@ -51,19 +53,19 @@ public class StackOverdrive extends OverdriveProjector {
             if (charge >= reload) {
                 float realRange = range + phaseHeat * phaseRangeBoost;
                 charge = 0f;
-                AtomicReference<Float> boost = new AtomicReference<>(realBoost());
+                boost = realBoost();
                 indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> {
-                    boost.set(boost.get() + ((OverdriveBuild) other).realBoost() - 1.0f);
+                    boost += ((OverdriveBuild) other).realBoost() / 2;
                 });
 
                 Units.nearby(this.team, this.x, this.y, range, unit -> {
                     if (Arrays.stream(unit.abilities).anyMatch(ability -> ability instanceof OverdriveAbility))
-                        boost.set(boost.get() + 2.0f);
+                        boost += 1.0f;
 
                 });
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> {
-                    other.applyBoost(boost.get(), reload + 1F);
+                    other.applyBoost(boost, reload + 1F);
                 });
 
                 if (efficiency > 0) {

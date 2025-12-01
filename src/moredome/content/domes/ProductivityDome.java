@@ -45,8 +45,8 @@ import static mindustry.Vars.*;
 
 public class ProductivityDome extends Block {
     public float reload = 20f;
-    public float range = 285f;
-    public float minRange = 70f;
+    public float range = 300f;
+    public float minRange = 60f;
     public float useTime = 400f;
     public float productivity = 1.3f;
     //兼容新视界，哈哈
@@ -80,7 +80,7 @@ public class ProductivityDome extends Block {
         emitLight = true;
         lightRadius = 100f;
         envEnabled |= Env.space;
-        health = 30000;
+        health = 40000;
         clipSize = range * 2f;
     }
 
@@ -358,12 +358,10 @@ public class ProductivityDome extends Block {
                 } else if (target instanceof Reconstructor.ReconstructorBuild r) {
                     maxTime = ((Reconstructor) r.block).constructTime;
                     isUnitBuilding = true;
-                }
-                else if (target instanceof UnitAssembler.UnitAssemblerBuild a) {
+                } else if (target instanceof UnitAssembler.UnitAssemblerBuild a) {
                     maxTime = a.plan().time;
                     isUnitBuilding = true;
-                }
-                else if (hasJumpGate && jumpGateClass.isInstance(target)) {
+                } else if (hasJumpGate && jumpGateClass.isInstance(target)) {
                     try {
                         float base = (float) jgCraftTime.invoke(target);
                         int count = jgSpawnCount.getInt(target);

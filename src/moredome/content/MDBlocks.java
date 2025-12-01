@@ -13,7 +13,7 @@ public class MDBlocks {
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
-            requirements(Category.effect, with(Items.copper, 200, Items.lead, 200, Items.titanium, 130, Items.silicon, 130, Items.plastanium, 500, Items.surgeAlloy, 300, Items.sporePod, 100));
+            requirements(Category.effect, with(Items.copper, 200, Items.lead, 200, Items.titanium, 130, Items.silicon, 130, Items.plastanium, 500, Items.surgeAlloy, 350, Items.blastCompound, 100));
             consumeItem(Items.surgeAlloy).boost();
             consumePower(19.084f);
             range = 400f;
@@ -37,22 +37,22 @@ public class MDBlocks {
             consumePower(4f);
         }};
         mobileOverdrive = new MobileOverdrive("mobile-overdrive-block",false) {{
-            requirements(Category.units, with(Items.surgeAlloy, 1000));
+            requirements(Category.units, with(Items.surgeAlloy, 800));
             size = 1;
         }};
         evilOverdrive = new MobileOverdrive("evil-overdrive-block",true) {{
-            requirements(Category.units, with(Items.surgeAlloy, 600,Items.blastCompound,200));
+            requirements(Category.units, with(Items.surgeAlloy, 500,Items.blastCompound,200));
             size = 1;
         }};
         liquidDome = new LiquidDome("liquid-dome") {{
-            requirements(Category.effect, with(Items.metaglass, 450, Items.surgeAlloy, 100));
+            requirements(Category.effect, with(Items.metaglass, 400, Items.surgeAlloy, 100));
             size = 3;
             consumeLiquid(Liquids.oil, 0.5f);
             consumeLiquid(Liquids.cryofluid, 1.5f);
             consumePower(12f);
         }};
         productivityDome = new ProductivityDome("productivity-dome") {{
-            requirements(Category.effect,with( Items.phaseFabric, 600, Items.surgeAlloy, 200));
+            requirements(Category.effect,with( Items.phaseFabric, 500, Items.surgeAlloy, 200,Items.silicon, 300,Items.graphite,100));
             size = 3;
             consumePower(40f);
         }};
