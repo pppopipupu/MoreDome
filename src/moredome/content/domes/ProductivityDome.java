@@ -8,11 +8,14 @@ import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
+import arc.math.geom.Vec2;
 import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.content.Blocks;
+import mindustry.content.Fx;
+import mindustry.entities.Units;
 import mindustry.entities.bullet.ContinuousLaserBulletType;
 import mindustry.game.EventType;
 import mindustry.game.Team;
@@ -28,6 +31,7 @@ import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.payloads.UnitPayload;
 import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.units.Reconstructor;
+import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.meta.*;
 
@@ -144,6 +148,9 @@ public class ProductivityDome extends Block {
                     } else if (build instanceof Reconstructor.ReconstructorBuild r) {
                         if (!r.constructing()) active = false;
                         else baseTime = ((Reconstructor) r.block).constructTime;
+                    } else if (build instanceof UnitAssembler.UnitAssemblerBuild a) {
+                        if (!a.ready()) active = false;
+                        else baseTime = a.plan().time;
                     } else if (hasJumpGate && jumpGateClass.isInstance(build)) {
                         try {
                             if (!(boolean) jgCanConsume.invoke(build)) active = false;
@@ -221,12 +228,29 @@ public class ProductivityDome extends Block {
                                         }
                                     }
                                 }
+                            } else if (build instanceof UnitAssembler.UnitAssemblerBuild a) {
+                                var plan = a.plan();
+                                Vec2 spawn = a.getUnitSpawn();
+                                var unit = plan.unit.create(team);
+                                if (unit.isCommandable() && a.commandPos != null) {
+                                    unit.command().commandPosition(a.commandPos);
+                                }
+                                unit.set(spawn.x + Mathf.range(0.001f), spawn.y + Mathf.range(0.001f));
+                                unit.rotation = rotdeg();
+                                var targetBuild = unit.buildOn();
+                                var payload = new UnitPayload(unit);
+                                if (targetBuild != null && targetBuild.team == team && targetBuild.acceptPayload(targetBuild, payload)) {
+                                    targetBuild.handlePayload(targetBuild, payload);
+                                } else if (!net.client()) {
+                                    unit.add();
+                                    Units.notifyUnitSpawn(unit);
+                                }
+                                Fx.unitAssemble.at(spawn.x, spawn.y, 0f, plan.unit);
                             } else if (hasJumpGate && jumpGateClass.isInstance(build)) {
                                 try {
                                     jgFindTiles.invoke(build);
                                     int count = jgSpawnCount.getInt(build);
                                     for (int i = 0; i < count; i++) jgSpawnUnit.invoke(build);
-                                    build.consume();
                                 } catch (Exception ignored) {
                                 }
                             }
@@ -252,6 +276,8 @@ public class ProductivityDome extends Block {
                                 (other instanceof GenericCrafter.GenericCrafterBuild ||
                                         other instanceof UnitFactory.UnitFactoryBuild ||
                                         other instanceof Reconstructor.ReconstructorBuild ||
+                                        other instanceof UnitAssembler.UnitAssemblerBuild ||
+
                                         (hasJumpGate && jumpGateClass.isInstance(other))) && other.enabled,
                         other -> {
                             if (!productBuildings.containsKey(other)) {
@@ -263,6 +289,8 @@ public class ProductivityDome extends Block {
                                         time = ((UnitFactory) u.block).plans.get(u.currentPlan).time;
                                 } else if (other instanceof Reconstructor.ReconstructorBuild r) {
                                     time = ((Reconstructor) r.block).constructTime;
+                                } else if (other instanceof UnitAssembler.UnitAssemblerBuild a) {
+                                    time = a.plan().time;
                                 } else if (hasJumpGate && jumpGateClass.isInstance(other)) {
                                     try {
                                         float base = (float) jgCraftTime.invoke(other);
@@ -330,7 +358,12 @@ public class ProductivityDome extends Block {
                 } else if (target instanceof Reconstructor.ReconstructorBuild r) {
                     maxTime = ((Reconstructor) r.block).constructTime;
                     isUnitBuilding = true;
-                } else if (hasJumpGate && jumpGateClass.isInstance(target)) {
+                }
+                else if (target instanceof UnitAssembler.UnitAssemblerBuild a) {
+                    maxTime = a.plan().time;
+                    isUnitBuilding = true;
+                }
+                else if (hasJumpGate && jumpGateClass.isInstance(target)) {
                     try {
                         float base = (float) jgCraftTime.invoke(target);
                         int count = jgSpawnCount.getInt(target);
