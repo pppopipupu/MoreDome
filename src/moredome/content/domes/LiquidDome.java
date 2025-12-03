@@ -60,7 +60,7 @@ public class LiquidDome extends OverdriveProjector {
             }
             if (charge >= reload) {
                 float realRange = range + phaseHeat * phaseRangeBoost;
-                this.liquids.add(Liquids.slag, 150f);
+                this.liquids.add(Liquids.neoplasm, 200f);
                 charge = 0f;
                 indexer.eachBlock(this, realRange, other -> other instanceof BaseTurret.BaseTurretBuild || other instanceof Drill.DrillBuild || other instanceof ForceProjector.ForceBuild, other -> {
 
@@ -82,7 +82,7 @@ public class LiquidDome extends OverdriveProjector {
     @Override
     public void setStats() {
         super.setStats();
-        stats.add(mindustry.world.meta.Stat.output, Liquids.slag, 150, true);
+        stats.add(mindustry.world.meta.Stat.output, Liquids.neoplasm, 200, true);
     }
 }
 
