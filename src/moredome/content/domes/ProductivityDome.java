@@ -46,7 +46,7 @@ import static mindustry.Vars.*;
 public class ProductivityDome extends Block {
     public float reload = 20f;
     public float range = 300f;
-    public float minRange = 60f;
+    public float minRange = 45f;
     public float useTime = 400f;
     public float productivity = 1.3f;
     //兼容新视界，哈哈
