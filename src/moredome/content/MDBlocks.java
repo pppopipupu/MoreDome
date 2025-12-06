@@ -56,7 +56,7 @@ public class MDBlocks {
         productivityDome = new ProductivityDome("productivity-dome") {{
             requirements(Category.effect,with( Items.phaseFabric, 300, Items.surgeAlloy, 200,Items.silicon, 300,Items.graphite,100));
             size = 3;
-            consumePower(30f);
+            consumePower(28f);
         }};
         biberyDome = new BriberyDome("bribery-dome") {{
            requirements(Category.effect,with(  Items.plastanium,200,Items.blastCompound,10));

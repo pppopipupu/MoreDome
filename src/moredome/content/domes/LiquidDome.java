@@ -43,8 +43,8 @@ public class LiquidDome extends OverdriveProjector {
 
         @Override
         public void updateTile() {
-            this.dumpLiquid(Liquids.slag);
-            if (liquids.get(Liquids.slag) >= block.liquidCapacity - 0.1f) {
+            this.dumpLiquid(Liquids.neoplasm);
+            if (liquids.get(Liquids.neoplasm) >= block.liquidCapacity - 0.1f) {
                 efficiency = 0;
             }
             smoothEfficiency = Mathf.lerpDelta(smoothEfficiency, efficiency, 0.08f);
