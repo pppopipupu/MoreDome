@@ -24,7 +24,6 @@ public class MDStatusEffects {
                 speedMultiplier *= 4f;
                 reloadMultiplier *= 3f;
                 buildSpeedMultiplier *= 3f;
-                healthMultiplier *= 0.8f;
             }
         };
         unitYangwei = new StatusEffect("unit-yangwei") {{

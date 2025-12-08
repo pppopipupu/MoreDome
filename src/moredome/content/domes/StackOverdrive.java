@@ -40,11 +40,12 @@ public class StackOverdrive extends OverdriveProjector {
     @Override
     public void setBars() {
         super.setBars();
-        addBar("stackboost", (StackOverdriveBuild entity) -> new Bar(() -> Core.bundle.format("moredome.bar.stackboost", Mathf.round(Math.max((entity.boost * 100 - 100), 0))),()-> Color.red, () -> entity.boost / (speedBoost + speedBoostPhase)));
+        addBar("stackboost", (StackOverdriveBuild entity) -> new Bar(() -> Core.bundle.format("moredome.bar.stackboost", Mathf.round(Math.max((entity.boost * 100 - 100), 0))), () -> Color.red, () -> entity.boost / (speedBoost + speedBoostPhase)));
     }
 
     public class StackOverdriveBuild extends OverdriveBuild {
         public float boost = realBoost();
+        public float amount = 1;
 
         @Override
         public void updateTile() {
@@ -59,14 +60,21 @@ public class StackOverdrive extends OverdriveProjector {
             if (charge >= reload) {
                 float realRange = range + phaseHeat * phaseRangeBoost;
                 charge = 0f;
+                amount = 1f;
                 boost = realBoost();
-                indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> boost += ((OverdriveBuild) other).realBoost() / 1.5f);
+                indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> {
+                    boost += ((OverdriveBuild) other).realBoost();
+                    amount++;
+                });
 
                 Units.nearby(this.team, this.x, this.y, realRange * 1.5f, unit -> {
-                    if (Arrays.stream(unit.abilities).anyMatch(ability -> ability instanceof OverdriveAbility))
-                        boost += 1.3f;
+                    if (Arrays.stream(unit.abilities).anyMatch(ability -> ability instanceof OverdriveAbility && !((OverdriveAbility) ability).isEvil)) {
+                        boost += 2.0f;
+                        amount++;
+                    }
 
                 });
+                boost = Math.max((boost / (amount / Mathf.pow(amount, 0.66f))), realBoost());
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> other.applyBoost(boost, reload + 1F));
 

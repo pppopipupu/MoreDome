@@ -16,7 +16,7 @@ public class MDBlocks {
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
             requirements(Category.effect, with(Items.copper, 200, Items.lead, 200, Items.titanium, 130, Items.silicon, 130, Items.surgeAlloy, 350, Items.blastCompound, 150));
-            consumeItem(Items.surgeAlloy).boost();
+            consumeItem(Items.surgeAlloy,2).boost();
             consumePower(20f);
             range = 400f;
             size = 5;
