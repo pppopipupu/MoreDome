@@ -25,7 +25,6 @@ public class LiquidDome extends OverdriveProjector {
         hasBoost = false;
         liquidCapacity = 1000;
         outputsLiquid = true;
-        canOverdrive = true;
         reload = 30f;
     }
 
@@ -53,7 +52,7 @@ public class LiquidDome extends OverdriveProjector {
             this.heat = Mathf.lerpDelta(this.heat, this.efficiency > 0.0F ? 1.0F : 0.0F, 0.08F);
             charge += heat * this.delta();
             if (efficiency > 0) {
-                useProgress += Time.delta;
+                useProgress += this.delta();
             }
 
             if (useProgress >= useTime) {
@@ -73,7 +72,7 @@ public class LiquidDome extends OverdriveProjector {
                             totalLiquid = liquid;
                         }
                     }
-                    if (totalLiquid != null) {
+                    if (totalLiquid != null && other.liquids != null) {
                         other.handleLiquid(other, totalLiquid, other.block.liquidCapacity);
                     }
                 });

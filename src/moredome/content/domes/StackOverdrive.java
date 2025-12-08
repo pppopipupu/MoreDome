@@ -74,7 +74,7 @@ public class StackOverdrive extends OverdriveProjector {
                     }
 
                 });
-                boost = Math.max((boost / (amount / Mathf.pow(amount, 0.66f))), realBoost());
+                boost = Math.max((boost / (amount / Mathf.pow(amount, 0.68f))), realBoost());
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> other.applyBoost(boost, reload + 1F));
 

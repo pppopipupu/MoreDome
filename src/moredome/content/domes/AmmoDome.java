@@ -17,7 +17,6 @@ public class AmmoDome extends OverdriveProjector {
         speedBoost = 1.0f;
         hasBoost = false;
         itemCapacity = 200;
-        canOverdrive = true;
         reload = 30f;
     }
 
@@ -30,7 +29,7 @@ public class AmmoDome extends OverdriveProjector {
             this.heat = Mathf.lerpDelta(this.heat, this.efficiency > 0.0F ? 1.0F : 0.0F, 0.08F);
             charge += heat * this.delta();
             if (efficiency > 0) {
-                useProgress += Time.delta;
+                useProgress += this.delta();
             }
 
             if (useProgress >= useTime) {
