@@ -62,7 +62,7 @@ public class StackOverdrive extends OverdriveProjector {
                 boost = realBoost();
                 indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> boost += ((OverdriveBuild) other).realBoost() / 1.5f);
 
-                Units.nearby(this.team, this.x, this.y, range, unit -> {
+                Units.nearby(this.team, this.x, this.y, realRange * 1.5f, unit -> {
                     if (Arrays.stream(unit.abilities).anyMatch(ability -> ability instanceof OverdriveAbility))
                         boost += 1.3f;
 
