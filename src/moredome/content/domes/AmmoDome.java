@@ -1,16 +1,12 @@
 package moredome.content.domes;
 
-import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Lines;
-import arc.graphics.g2d.ScissorStack;
 import arc.math.Mathf;
 import arc.util.Time;
-import arc.util.Tmp;
 import mindustry.type.Item;
 import mindustry.world.blocks.defense.OverdriveProjector;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatUnit;
 
 import static mindustry.Vars.indexer;
 
@@ -22,6 +18,15 @@ public class AmmoDome extends OverdriveProjector {
         speedBoost = 1.0f;
         hasBoost = false;
         itemCapacity = 200;
+    }
+
+    @Override
+    public void setStats() {
+        this.stats.timePeriod = this.useTime;
+        super.setStats();
+        this.stats.add(Stat.range, this.range / 8.0F, StatUnit.blocks);
+        this.stats.add(Stat.productionTime, this.useTime / 60.0F, StatUnit.seconds);
+
     }
 
     public class AmmoDomeBuild extends OverdriveBuild {

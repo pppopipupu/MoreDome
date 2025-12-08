@@ -1,5 +1,6 @@
 package moredome.content.domes;
 
+import arc.Core;
 import arc.math.geom.Geometry;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -7,12 +8,11 @@ import arc.math.*;
 import arc.util.*;
 import mindustry.entities.Units;
 import mindustry.graphics.*;
+import mindustry.ui.Bar;
 import mindustry.world.blocks.defense.OverdriveProjector;
-import moredome.content.MDStatusEffects;
 import moredome.content.abilities.OverdriveAbility;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static mindustry.Vars.*;
 
@@ -37,6 +37,12 @@ public class StackOverdrive extends OverdriveProjector {
         indexer.eachBlock(player.team(), x * tilesize + offset, y * tilesize + offset, range, other -> other.block.canOverdrive, other -> Drawf.selected(other, Tmp.c1.set(rainbow).a(Mathf.absin(4f, 1f))));
     }
 
+    @Override
+    public void setBars() {
+        super.setBars();
+        addBar("stackboost", (StackOverdriveBuild entity) -> new Bar(() -> Core.bundle.format("moredome.bar.stackboost", Mathf.round(Math.max((entity.boost * 100 - 100), 0))),()-> Color.red, () -> entity.boost / (speedBoost + speedBoostPhase)));
+    }
+
     public class StackOverdriveBuild extends OverdriveBuild {
         public float boost = realBoost();
 
@@ -54,19 +60,15 @@ public class StackOverdrive extends OverdriveProjector {
                 float realRange = range + phaseHeat * phaseRangeBoost;
                 charge = 0f;
                 boost = realBoost();
-                indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> {
-                    boost += ((OverdriveBuild) other).realBoost() / 2;
-                });
+                indexer.eachBlock(this, realRange * 1.5f, other -> other instanceof OverdriveBuild && other != this, other -> boost += ((OverdriveBuild) other).realBoost() / 1.5f);
 
                 Units.nearby(this.team, this.x, this.y, range, unit -> {
                     if (Arrays.stream(unit.abilities).anyMatch(ability -> ability instanceof OverdriveAbility))
-                        boost += 1.0f;
+                        boost += 1.3f;
 
                 });
 
-                indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> {
-                    other.applyBoost(boost, reload + 1F);
-                });
+                indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> other.applyBoost(boost, reload + 1F));
 
                 if (efficiency > 0) {
                     useProgress += delta();

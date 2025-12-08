@@ -1,5 +1,6 @@
 package moredome.content.domes;
 
+import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -26,6 +27,7 @@ import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.logic.Ranged;
 import mindustry.type.UnitType;
+import mindustry.ui.Bar;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.payloads.UnitPayload;
@@ -48,7 +50,7 @@ public class ProductivityDome extends Block {
     public float range = 300f;
     public float minRange = 45f;
     public float useTime = 400f;
-    public float productivity = 1.3f;
+    public float productivity = 1.25f;
     //兼容新视界，哈哈
     private static Class<?> jumpGateClass;
     private static Method jgCanConsume, jgCraftTime, jgFindTiles, jgSpawnUnit;
@@ -104,6 +106,12 @@ public class ProductivityDome extends Block {
 
         stats.add(Stat.range, range / tilesize, StatUnit.blocks);
         stats.add(Stat.productionTime, useTime / 60f, StatUnit.seconds);
+    }
+
+    @Override
+    public void setBars() {
+        super.setBars();
+        addBar("productivity", (ProductivityDomeBuild entity) -> new Bar(() -> Core.bundle.format("moredome.bar.productivity", entity.efficiency * 78), () -> Color.green, () -> entity.efficiency));
     }
 
     public class ProductivityDomeBuild extends Building implements Ranged {
