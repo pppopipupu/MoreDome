@@ -10,7 +10,8 @@ import moredome.content.domes.*;
 import static mindustry.type.ItemStack.with;
 
 public class MDBlocks {
-    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive,evilOverdrive, liquidDome,productivityDome,biberyDome;
+    public static Block stackOverdrive, slowdownDome, ammoDome, rangeDome, mobileOverdrive,evilOverdrive, liquidDome,productivityDome,biberyDome
+            ,randomAmmoDome;
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
@@ -28,9 +29,16 @@ public class MDBlocks {
         ammoDome = new AmmoDome("ammo-dome") {{
             requirements(Category.effect, with(Items.lead, 20, Items.titanium, 10, Items.silicon, 10, Items.sporePod, 200));
             size = 3;
-            consumeItem(Items.copper, 45);
+            consumeItem(Items.copper, 40);
             consumeItem(Items.surgeAlloy, 2);
             consumePower(10f);
+        }};
+        randomAmmoDome = new AmmoDome("random-ammo-dome") {{
+            requirements(Category.effect, with(Items.lead, 10, Items.titanium, 10, Items.silicon, 10, Items.sporePod, 300));
+            size = 3;
+            isRandom = true;
+            consumeItem(Items.copper, 50);
+            consumePower(8f);
         }};
         rangeDome = new RangeDome("range-dome") {{
             requirements(Category.effect, with(Items.sporePod, 9999));

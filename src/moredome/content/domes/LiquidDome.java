@@ -25,6 +25,8 @@ public class LiquidDome extends OverdriveProjector {
         hasBoost = false;
         liquidCapacity = 1000;
         outputsLiquid = true;
+        canOverdrive = true;
+        reload = 30f;
     }
 
     public class LiquidDomeBuild extends OverdriveBuild {
@@ -49,9 +51,9 @@ public class LiquidDome extends OverdriveProjector {
             }
             smoothEfficiency = Mathf.lerpDelta(smoothEfficiency, efficiency, 0.08f);
             this.heat = Mathf.lerpDelta(this.heat, this.efficiency > 0.0F ? 1.0F : 0.0F, 0.08F);
-            charge += heat * Time.delta;
+            charge += heat * this.delta();
             if (efficiency > 0) {
-                useProgress += delta();
+                useProgress += Time.delta;
             }
 
             if (useProgress >= useTime) {
