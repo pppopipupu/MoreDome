@@ -5,8 +5,6 @@ import arc.util.Time;
 import mindustry.type.Item;
 import mindustry.world.blocks.defense.OverdriveProjector;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.meta.Stat;
-import mindustry.world.meta.StatUnit;
 
 import static mindustry.Vars.indexer;
 
@@ -20,14 +18,6 @@ public class AmmoDome extends OverdriveProjector {
         itemCapacity = 200;
     }
 
-    @Override
-    public void setStats() {
-        this.stats.timePeriod = this.useTime;
-        super.setStats();
-        this.stats.add(Stat.range, this.range / 8.0F, StatUnit.blocks);
-        this.stats.add(Stat.productionTime, this.useTime / 60.0F, StatUnit.seconds);
-
-    }
 
     public class AmmoDomeBuild extends OverdriveBuild {
 

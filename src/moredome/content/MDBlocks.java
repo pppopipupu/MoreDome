@@ -14,7 +14,7 @@ public class MDBlocks {
 
     public static void load() {
         stackOverdrive = new StackOverdrive("stack-overdrive") {{
-            requirements(Category.effect, with(Items.copper, 200, Items.lead, 200, Items.titanium, 130, Items.silicon, 130, Items.plastanium, 500, Items.surgeAlloy, 350, Items.blastCompound, 100));
+            requirements(Category.effect, with(Items.copper, 200, Items.lead, 200, Items.titanium, 130, Items.silicon, 130, Items.surgeAlloy, 350, Items.blastCompound, 150));
             consumeItem(Items.surgeAlloy).boost();
             consumePower(20f);
             range = 400f;
@@ -28,7 +28,7 @@ public class MDBlocks {
         ammoDome = new AmmoDome("ammo-dome") {{
             requirements(Category.effect, with(Items.lead, 20, Items.titanium, 10, Items.silicon, 10, Items.sporePod, 200));
             size = 3;
-            consumeItem(Items.copper, 50);
+            consumeItem(Items.copper, 45);
             consumeItem(Items.surgeAlloy, 2);
             consumePower(10f);
         }};
@@ -49,8 +49,8 @@ public class MDBlocks {
         liquidDome = new LiquidDome("liquid-dome") {{
             requirements(Category.effect, with(Items.metaglass, 250, Items.surgeAlloy, 100));
             size = 3;
-            consumeLiquid(Liquids.oil, 0.5f);
-            consumeLiquid(Liquids.cryofluid, 1.0f);
+            consumeLiquid(Liquids.oil, 0.4f);
+            consumeLiquid(Liquids.cryofluid, 0.8f);
             consumePower(12f);
         }};
         productivityDome = new ProductivityDome("productivity-dome") {{
