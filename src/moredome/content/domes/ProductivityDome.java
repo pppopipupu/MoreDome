@@ -81,7 +81,7 @@ public class ProductivityDome extends Block {
         canOverdrive = false;
         emitLight = true;
         lightRadius = 100f;
-        envEnabled |= Env.space;
+        envEnabled |= Env.space | Env.underwater;
         health = 40000;
         clipSize = range * 2f;
     }

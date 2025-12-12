@@ -21,8 +21,8 @@ public class StackOverdrive extends OverdriveProjector {
 
     public StackOverdrive(String name) {
         super(name);
-        speedBoost = 2.0f;
-        speedBoostPhase = 1.5f;
+        speedBoost = 2.25f;
+        speedBoostPhase = 1.75f;
         phaseRangeBoost = 200f;
         useTime = 600f;
         canOverdrive = false;
@@ -74,7 +74,7 @@ public class StackOverdrive extends OverdriveProjector {
                     }
 
                 });
-                boost = Math.max((boost / (amount / Mathf.pow(amount, 0.68f))), realBoost());
+                boost = Math.max((boost / (amount / Mathf.pow(amount,0.65f))), realBoost());
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> other.applyBoost(boost, reload + 1F));
 
