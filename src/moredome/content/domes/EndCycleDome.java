@@ -200,7 +200,7 @@ public class EndCycleDome extends Block {
 
         private void drawCountdown() {
             if (liquidating) {
-                Fonts.outline.draw("开始清算", x, y + 20f, Color.red, 1.0f, false, Align.center);
+                Fonts.outline.draw("开始清算", x, y + 20f, Color.red, 1.5f, false, Align.center);
             } else {
                 int totalSeconds = (int) (Math.max(0, countDown) / 60f);
                 int minutes = totalSeconds / 60;
@@ -208,7 +208,7 @@ public class EndCycleDome extends Block {
                 String text = String.format("%02d:%02d", minutes, seconds);
 
                 Color color;
-                if (minutes >= 5) {
+                if (minutes >= 2) {
                     color = Color.white;
                 } else {
                     color = Tmp.c1.set(Color.red).lerp(Color.black, Mathf.absin(Time.time, 5f, 1f));
