@@ -60,6 +60,11 @@ public class EndCycleDome extends Block {
     }
 
     @Override
+    public boolean canBreak(Tile tile) {
+        return false;
+    }
+
+    @Override
     public void placeBegan(Tile tile, Block previous, Unit builder) {
         if (builder == null || builder.type != UnitTypes.oct) {
             rejectionFx.at(tile.worldx(), tile.worldy());
