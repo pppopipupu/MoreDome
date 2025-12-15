@@ -1,6 +1,5 @@
 package moredome.content.domes;
 
-import arc.Events;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -12,12 +11,9 @@ import arc.util.Align;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
-import mindustry.content.Fx;
 import mindustry.content.UnitTypes;
 import mindustry.entities.Effect;
-import mindustry.game.EventType;
 import mindustry.game.Rules;
-import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
@@ -339,7 +335,7 @@ public class EndCycleDome extends Block {
             Tmp.v2.trns(rotation, -width, 0).add(x, y);
             Tmp.v3.trns(rotation, width, 0).add(x, y);
 
-            float curveH = (height > 0.5f ? height : 0.5f) * 1.2f;
+            float curveH = (Math.max(height, 0.5f)) * 1.2f;
 
             Tmp.v4.trns(rotation - 90, curveH).add(x, y);
             float c1x = x + (Tmp.v2.x - x) * 0.4f + (Tmp.v4.x - x) * 0.7f;

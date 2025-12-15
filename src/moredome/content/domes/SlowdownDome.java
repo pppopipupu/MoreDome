@@ -2,10 +2,7 @@ package moredome.content.domes;
 
 import arc.math.Mathf;
 import arc.util.Time;
-import mindustry.gen.Building;
 import mindustry.world.blocks.defense.OverdriveProjector;
-import mindustry.world.blocks.defense.turrets.BaseTurret;
-import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.units.RepairTower;
 import mindustry.world.blocks.units.RepairTurret;
 

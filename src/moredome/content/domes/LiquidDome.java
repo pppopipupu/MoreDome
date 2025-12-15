@@ -4,7 +4,6 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
 import arc.math.Mathf;
-import arc.util.Time;
 import mindustry.Vars;
 import mindustry.content.Liquids;
 import mindustry.type.Liquid;

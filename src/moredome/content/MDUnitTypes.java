@@ -2,9 +2,6 @@ package moredome.content;
 
 
 import mindustry.gen.LegsUnit;
-import mindustry.gen.Legsc;
-import mindustry.gen.UnitEntity;
-import mindustry.gen.Unitc;
 import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
 import moredome.content.abilities.OverdriveAbility;

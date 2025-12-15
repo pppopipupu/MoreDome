@@ -3,9 +3,7 @@ package moredome.content;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.type.Category;
-import mindustry.type.Item;
 import mindustry.world.Block;
-import mindustry.world.blocks.heat.HeatProducer;
 import mindustry.world.meta.BuildVisibility;
 import moredome.content.domes.*;
 

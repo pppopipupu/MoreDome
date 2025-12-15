@@ -5,7 +5,6 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
-import arc.math.Mathf;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;

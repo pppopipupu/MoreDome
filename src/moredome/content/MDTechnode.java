@@ -2,14 +2,11 @@ package moredome.content;
 
 import arc.struct.Seq;
 import mindustry.content.Blocks;
-import mindustry.content.Items;
 import mindustry.content.TechTree;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Objectives;
 import mindustry.type.ItemStack;
 import mindustry.type.SectorPreset;
-
-import static mindustry.content.TechTree.node;
 
 public class MDTechnode
 {

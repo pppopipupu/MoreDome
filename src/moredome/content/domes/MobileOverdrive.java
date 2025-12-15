@@ -3,11 +3,8 @@ package moredome.content.domes;
 import mindustry.content.Items;
 import mindustry.gen.Building;
 import mindustry.gen.Unit;
-import mindustry.type.ItemStack;
-import mindustry.type.UnitType;
 import mindustry.world.Block;
 import moredome.content.MDUnitTypes;
-import moredome.content.abilities.OverdriveAbility;
 
 public class MobileOverdrive extends Block {
     public final boolean isEvil;
