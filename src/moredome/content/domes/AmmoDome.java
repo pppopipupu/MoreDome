@@ -44,7 +44,7 @@ public class AmmoDome extends OverdriveProjector {
                 indexer.eachBlock(this, realRange, other -> other instanceof ItemTurret.ItemTurretBuild, other -> {
                     ItemTurret.ItemTurretBuild turret = (ItemTurret.ItemTurretBuild) other;
                     ItemTurret block = (ItemTurret) turret.block;
-                    if(!isRandom) {
+                    if (!isRandom) {
                         Item bestAmmo = null;
                         float maxDamage = -1f;
 
@@ -62,8 +62,9 @@ public class AmmoDome extends OverdriveProjector {
                             turret.totalAmmo = 0;
                             turret.handleStack(bestAmmo, block.maxAmmo, null);
                         }
-                    }
-                    else {
+                    } else {
+                        if (block.ammoTypes.keys().toSeq().size < 2)
+                            return;
                         Item randomAmmo = block.ammoTypes.keys().toSeq().random();
                         if (randomAmmo != null) {
                             turret.ammo.clear();
