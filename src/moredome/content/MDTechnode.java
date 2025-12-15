@@ -19,7 +19,8 @@ public class MDTechnode
         addToNode(Blocks.meltdown,()-> node(MDBlocks.mobileOverdrive, ()-> node(MDBlocks.evilOverdrive)));
         addToNode(Blocks.malign,()-> node(MDBlocks.mobileOverdrive, ()-> node(MDBlocks.evilOverdrive)));
         addToNode(Blocks.malign,()-> node(MDBlocks.productivityDome));
-        addToNode(Blocks.duo,()->node(MDBlocks.ammoDome, ()-> node(MDBlocks.liquidDome)));
+        addToNode(Blocks.duo,()->node(MDBlocks.ammoDome, ()-> node(MDBlocks.liquidDome,()-> node(MDBlocks.randomAmmoDome))));
+
 
 
     }
