@@ -1,4 +1,4 @@
-package moredome.content.domes;
+package moredome.world.blocks.domes;
 
 import mindustry.content.Items;
 import mindustry.gen.Building;

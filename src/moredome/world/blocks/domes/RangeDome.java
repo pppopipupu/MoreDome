@@ -1,4 +1,4 @@
-package moredome.content.domes;
+package moredome.world.blocks.domes;
 
 import arc.math.Mathf;
 import arc.struct.ObjectFloatMap;

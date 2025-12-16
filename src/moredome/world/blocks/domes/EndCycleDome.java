@@ -1,4 +1,4 @@
-package moredome.content.domes;
+package moredome.world.blocks.domes;
 
 import arc.graphics.Blending;
 import arc.graphics.Color;

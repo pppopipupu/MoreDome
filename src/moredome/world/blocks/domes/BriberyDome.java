@@ -1,4 +1,4 @@
-package moredome.content.domes;
+package moredome.world.blocks.domes;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;

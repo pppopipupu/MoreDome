@@ -1,4 +1,4 @@
-package moredome.content.domes;
+package moredome.world.blocks.domes;
 
 import arc.Core;
 import arc.math.geom.Geometry;
@@ -10,7 +10,7 @@ import mindustry.entities.Units;
 import mindustry.graphics.*;
 import mindustry.ui.Bar;
 import mindustry.world.blocks.defense.OverdriveProjector;
-import moredome.content.abilities.OverdriveAbility;
+import moredome.entities.abilities.OverdriveAbility;
 
 import java.util.Arrays;
 

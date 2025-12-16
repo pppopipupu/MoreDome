@@ -4,7 +4,7 @@ package moredome.content;
 import mindustry.gen.LegsUnit;
 import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
-import moredome.content.abilities.OverdriveAbility;
+import moredome.entities.abilities.OverdriveAbility;
 
 public class MDUnitTypes {
     public static UnitType mobileOverdrive, evilOverdrive;

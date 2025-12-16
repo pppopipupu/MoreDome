@@ -1,4 +1,4 @@
-package moredome.content.abilities;
+package moredome.entities.abilities;
 
 
 import arc.Core;

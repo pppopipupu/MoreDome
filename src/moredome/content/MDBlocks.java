@@ -5,7 +5,7 @@ import mindustry.content.Liquids;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.meta.BuildVisibility;
-import moredome.content.domes.*;
+import moredome.world.blocks.domes.*;
 
 import static mindustry.type.ItemStack.with;
 
