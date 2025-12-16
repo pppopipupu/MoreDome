@@ -24,6 +24,7 @@ import mindustry.ui.Fonts;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.meta.Env;
 import moredome.content.MDStatusEffects;
 
 public class EndCycleDome extends Block {
@@ -51,12 +52,13 @@ public class EndCycleDome extends Block {
     public EndCycleDome(String name) {
         super(name);
         update = true;
-        solid = true;
+        solid = false;
         health = 66666;
         clipSize = 500;
         destructible = false;
         breakable = false;
         reload = 180f;
+        envEnabled |= Env.any;
     }
 
     @Override
