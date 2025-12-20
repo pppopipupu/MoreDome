@@ -275,7 +275,7 @@ public class ProductivityDome extends Block {
                 charge = 0f;
                 indexer.eachBlock(this, minRange, other -> other != this, other -> {
                     //直接发射融毁射线这一块
-                    Sounds.beam.at(x, y);
+                    Sounds.beamMeltdown.at(x, y);
                     Team bulletTeam = (this.team == Team.crux) ? Team.sharded : Team.crux;
                     ContinuousLaserBulletType meltDown = (ContinuousLaserBulletType) ((PowerTurret) Blocks.meltdown).shootType;
                     meltDown.create(this, bulletTeam, x, y, Angles.angle(x, y, other.x, other.y));
