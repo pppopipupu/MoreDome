@@ -33,8 +33,7 @@ public class MobileOverdrive extends Block {
             }
             u.set(x, y);
             u.add();
-
-            kill();
+            tile.setAir();
         }
     }
 }
