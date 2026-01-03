@@ -11,25 +11,20 @@ repositories{
 }
 
 java{
-    targetCompatibility = 8
-    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = 21
+    sourceCompatibility = 21
 }
 
 ext{
     //the build number that this mod is made for
-    mindustryVersion = 'v154'
+    mindustryVersion = 'v154.3'
     jabelVersion = "93fde537c7"
     //windows sucks
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
 
-//java 8 backwards compatibility flag
-allprojects{
-    tasks.withType(JavaCompile){
-        options.compilerArgs.addAll(['--release', '8'])
-    }
-}
+
 
 dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"

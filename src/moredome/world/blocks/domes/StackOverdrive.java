@@ -10,7 +10,9 @@ import mindustry.entities.Units;
 import mindustry.graphics.*;
 import mindustry.ui.Bar;
 import mindustry.world.blocks.defense.OverdriveProjector;
+import moredome.content.MDModels;
 import moredome.entities.abilities.OverdriveAbility;
+import moredome.render.MDOBJLoader;
 
 import java.util.Arrays;
 
@@ -74,7 +76,7 @@ public class StackOverdrive extends OverdriveProjector {
                     }
 
                 });
-                boost = Math.max((boost / (amount / Mathf.pow(amount,0.65f))), realBoost());
+                boost = Math.max((boost / (amount / Mathf.pow(amount, 0.65f))), realBoost());
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive, other -> other.applyBoost(boost, reload + 1F));
 
@@ -105,6 +107,8 @@ public class StackOverdrive extends OverdriveProjector {
         @Override
         public void draw() {
             super.draw();
+            MDOBJLoader.draw(MDModels.gun,Layer.max, x, y, Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)), 3f);
+           // MDOBJLoader.draw(MDModels.koishi, x, y, Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)), 10f);
             Color rainbow = Tmp.c1.set(Color.red).shiftHue(Time.time);
             for (int i = 50; i < 201; i += 50) {
                 float f = 1f - (Time.time / i) % 1f;
