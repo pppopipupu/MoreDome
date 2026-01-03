@@ -15,7 +15,7 @@ public class MDModels {
         angry = MDOBJLoader.loadModel("angry");
         koishi = MDOBJLoader.loadModel("koishi");
         monkey = MDOBJLoader.loadModel("test");
-        gun =  MDOBJLoader.loadModel("angry_gun");
+        gun =  MDOBJLoader.loadModel("angry_gun",MDShaders.wave);
 
     }
 

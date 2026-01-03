@@ -34,9 +34,8 @@ public class SlowdownDome extends OverdriveProjector {
 
                 indexer.eachBlock(this, realRange, other -> other.block.canOverdrive && other != this && other.power != null && other.block.consPower != null
                         && other.shouldConsumePower && other.timeScale() == 1.0f && !(other instanceof RepairTower.RepairTowerBuild || other instanceof RepairTurret.RepairPointBuild), other -> {
-                    other.applySlowdown(0.6f * other.timeScale(), reload-1f);
+                    other.applySlowdown(0.6f * other.timeScale(), reload - 1f);
                     power += other.block.consPower.usage * other.timeScale() + 0.01f;
-
                 });
 
                 if (efficiency > 0) {

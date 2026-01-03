@@ -107,8 +107,8 @@ public class StackOverdrive extends OverdriveProjector {
         @Override
         public void draw() {
             super.draw();
-            MDOBJLoader.draw(MDModels.gun,Layer.max, x, y, Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)), 3f);
-           // MDOBJLoader.draw(MDModels.koishi, x, y, Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)), 10f);
+            MDOBJLoader.draw(MDModels.koishi,Layer.max, x, y, Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)),Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)),Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)), 3f);
+            MDOBJLoader.draw(MDModels.gun,Layer.max,x,y,0,2.0f);
             Color rainbow = Tmp.c1.set(Color.red).shiftHue(Time.time);
             for (int i = 50; i < 201; i += 50) {
                 float f = 1f - (Time.time / i) % 1f;

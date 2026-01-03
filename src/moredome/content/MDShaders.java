@@ -2,12 +2,14 @@ package moredome.content;
 
 import arc.files.Fi;
 import arc.graphics.gl.Shader;
+import arc.util.Time;
 import mindustry.graphics.Shaders;
 import mindustry.mod.Mods;
 import moredome.MoreDome;
 
 public class MDShaders {
-    public static Shader modelShader;
+    public static Shader modelShader, wave;
+
     // from NH mod
     public static Fi getShaderFi(String file) {
         Mods.LoadedMod mod = MoreDome.MOD;
@@ -15,7 +17,15 @@ public class MDShaders {
         if (shaders.exists() && shaders.child(file).exists()) return shaders.child(file);
         return Shaders.getShaderFi(file);
     }
-    public static void load(){
-        modelShader = new Shader(getShaderFi("objmodel.vert"), getShaderFi("objmodel.frag"));
+
+    public static void load() {
+        modelShader = new Shader(getShaderFi("objmodel.vert"), getShaderFi("objmodel.frag")) {
+        };
+        wave = new Shader(getShaderFi("objmodel.vert"), getShaderFi("wave.frag")) {
+            @Override
+            public void apply() {
+                setUniformf("u_time", Time.time);
+            }
+        };
     }
 }

@@ -19,9 +19,11 @@ public class MDOBJLoader {
     private static final Mat3D projection = new Mat3D();
     private static final Mat3D transform = new Mat3D();
 
-    public record ModelPart(Mesh mesh, Texture texture) {}
+    public record ModelPart(Mesh mesh, Texture texture) {
+    }
 
-    public record MDModel(Seq<ModelPart> parts, Shader shader) {}
+    public record MDModel(Seq<ModelPart> parts, Shader shader) {
+    }
 
     public static MDModel loadModel(String name) {
         return loadModel(name, MDShaders.modelShader);
@@ -66,6 +68,8 @@ public class MDOBJLoader {
             Gl.clear(Gl.depthBufferBit);
             Gl.depthMask(true);
             Gl.enable(Gl.depthTest);
+            Gl.depthFunc(Gl.less);
+            Gl.enable(Gl.cullFace);
 
             float w = Core.graphics.getWidth();
             float h = Core.graphics.getHeight();
@@ -88,6 +92,7 @@ public class MDOBJLoader {
                 part.mesh.render(model.shader, Gl.triangles);
             }
 
+            Gl.disable(Gl.cullFace);
             Gl.disable(Gl.depthTest);
             Gl.depthMask(false);
         });
@@ -136,6 +141,7 @@ public class MDOBJLoader {
     private static Seq<ModelPart> parseObj(String[] lines, ObjectMap<String, Texture> materials) {
         FloatSeq globalVertices = new FloatSeq();
         FloatSeq globalTexCoords = new FloatSeq();
+        FloatSeq globalNormals = new FloatSeq();
         ObjectMap<String, FloatSeq> partVertices = new ObjectMap<>();
         ObjectMap<String, ShortSeq> partIndices = new ObjectMap<>();
 
@@ -151,6 +157,10 @@ public class MDOBJLoader {
                 globalVertices.add(Float.parseFloat(parts[1]));
                 globalVertices.add(Float.parseFloat(parts[2]));
                 globalVertices.add(Float.parseFloat(parts[3]));
+            } else if (parts[0].equals("vn")) {
+                globalNormals.add(Float.parseFloat(parts[1]));
+                globalNormals.add(Float.parseFloat(parts[2]));
+                globalNormals.add(Float.parseFloat(parts[3]));
             } else if (parts[0].equals("vt")) {
                 globalTexCoords.add(Float.parseFloat(parts[1]));
                 globalTexCoords.add(Float.parseFloat(parts[2]));
@@ -166,20 +176,31 @@ public class MDOBJLoader {
                 FloatSeq currentVerts = partVertices.get(currentMtl);
                 ShortSeq currentInds = partIndices.get(currentMtl);
 
-                for (int i = 2; i < parts.length; i++) {
+                for (int i = 3; i < parts.length; i++) {
                     int[] triIndices = {1, i - 1, i};
 
                     for (int pIndex : triIndices) {
                         String[] faceData = parts[pIndex].split("/");
                         int vIndex = Integer.parseInt(faceData[0]) - 1;
                         int tIndex = faceData.length > 1 && !faceData[1].isEmpty() ? Integer.parseInt(faceData[1]) - 1 : 0;
+                        int nIndex = faceData.length > 2 && !faceData[2].isEmpty() ? Integer.parseInt(faceData[2]) - 1 : -1;
 
-                        short index = (short) (currentVerts.size / 5);
+                        short index = (short) (currentVerts.size / 8);
                         currentInds.add(index);
 
                         currentVerts.add(globalVertices.get(vIndex * 3));
                         currentVerts.add(globalVertices.get(vIndex * 3 + 1));
                         currentVerts.add(globalVertices.get(vIndex * 3 + 2));
+
+                        if (nIndex >= 0 && nIndex * 3 + 2 < globalNormals.size) {
+                            currentVerts.add(globalNormals.get(nIndex * 3));
+                            currentVerts.add(globalNormals.get(nIndex * 3 + 1));
+                            currentVerts.add(globalNormals.get(nIndex * 3 + 2));
+                        } else {
+                            currentVerts.add(0f);
+                            currentVerts.add(0f);
+                            currentVerts.add(1f);
+                        }
 
                         if (globalTexCoords.size > 0) {
                             currentVerts.add(globalTexCoords.get(tIndex * 2));
@@ -197,8 +218,9 @@ public class MDOBJLoader {
         for (ObjectMap.Entry<String, FloatSeq> entry : partVertices.entries()) {
             if (entry.value.size == 0) continue;
 
-            Mesh mesh = new Mesh(true, entry.value.size / 5, partIndices.get(entry.key).size,
+            Mesh mesh = new Mesh(true, entry.value.size / 8, partIndices.get(entry.key).size,
                     new VertexAttribute(3, "a_position"),
+                    new VertexAttribute(3, "a_normal"),
                     new VertexAttribute(2, "a_texCoord0"));
 
             mesh.setVertices(entry.value.toArray());
