@@ -29,7 +29,6 @@ public class MDStatusEffects {
                 if (unit.mining())
                     unit.mineTimer += Time.delta * unit.type.mineSpeed * state.rules.unitMineSpeed(unit.team) * 2f;
             }
-
             {
                 speedMultiplier *= 3f;
                 reloadMultiplier *= 3f;

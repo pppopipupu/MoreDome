@@ -5,12 +5,14 @@ import arc.math.geom.Geometry;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import arc.math.geom.Quat;
 import arc.util.*;
 import mindustry.entities.Units;
 import mindustry.graphics.*;
 import mindustry.ui.Bar;
 import mindustry.world.blocks.defense.OverdriveProjector;
 import moredome.content.MDModels;
+import moredome.content.MDShaders;
 import moredome.entities.abilities.OverdriveAbility;
 import moredome.render.MDOBJLoader;
 
@@ -107,8 +109,10 @@ public class StackOverdrive extends OverdriveProjector {
         @Override
         public void draw() {
             super.draw();
-            MDOBJLoader.draw(MDModels.koishi,Layer.max, x, y, Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)),Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)),Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200)), 3f);
-            MDOBJLoader.draw(MDModels.gun,Layer.max,x,y,0,2.0f);
+            float time = Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200));
+            MDOBJLoader.draw(MDModels.koishi,Layer.max, x, y, new Quat().setEulerAngles(time,time,time), 3f, MDShaders.modelShader);
+            MDOBJLoader.draw(MDModels.angry,Layer.max, x, y, new Quat().setEulerAngles(time,time,time), 2f, MDShaders.wave);
+            MDOBJLoader.draw(MDModels.gun,Layer.max, x, y, new Quat().setEulerAngles(time,time,time), 2f, MDShaders.modelShader);
             Color rainbow = Tmp.c1.set(Color.red).shiftHue(Time.time);
             for (int i = 50; i < 201; i += 50) {
                 float f = 1f - (Time.time / i) % 1f;

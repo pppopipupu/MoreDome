@@ -12,24 +12,6 @@ import static mindustry.Vars.mods;
 
 public class MoreDome extends Mod {
     public static Mods.LoadedMod MOD;
-    //TODO Delete this
-//    public static boolean fireMod = true;
-//    public static Class<?> Fire;
-//    static {
-//        try {
-//            Fire = Class.forName("fire.FRVars");
-//        } catch (Exception ignored) {
-//            fireMod = false;
-//        }
-//        if (fireMod) {
-//            Core.settings.put("noMultiMods", false);
-//            try {
-//                Fire.getField("noMultiMods").setAccessible(true);
-//                Fire.getField("noMultiMods").setBoolean(Fire, false);
-//            } catch (Exception ignored) {
-//            }
-//        }
-//    }
 
     public MoreDome() {
 
@@ -48,6 +30,7 @@ public class MoreDome extends Mod {
 
     @Override
     public void init() {
+
 
     }
 }
