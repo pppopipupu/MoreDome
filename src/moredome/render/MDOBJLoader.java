@@ -4,13 +4,11 @@ import arc.Core;
 import arc.files.Fi;
 import arc.graphics.*;
 import arc.graphics.g2d.Draw;
-import arc.graphics.g3d.Camera3D;
 import arc.graphics.gl.FrameBuffer;
 import arc.graphics.gl.Shader;
 import arc.math.geom.Mat3D;
 import arc.math.geom.Quat;
 import arc.math.geom.Vec2;
-import arc.math.geom.Vec3;
 import arc.struct.*;
 import arc.util.Log;
 import mindustry.graphics.Shaders;
@@ -18,10 +16,9 @@ import moredome.MoreDome;
 import moredome.content.MDShaders;
 
 public class MDOBJLoader {
-    private static final Camera3D cam = new Camera3D();
+    private static final Mat3D projection = new Mat3D();
     private static final Mat3D transform = new Mat3D();
     private static FrameBuffer buffer;
-    private static final float ssaa = 1.5f;
 
     public record ModelPart(Mesh mesh, Texture texture) {
     }
@@ -72,9 +69,10 @@ public class MDOBJLoader {
         }
 
         Draw.draw(layer, () -> {
+            Draw.flush();
 
-            int w = (int) (Core.graphics.getWidth()*ssaa);
-            int h = (int) (Core.graphics.getHeight()*ssaa);
+            int w = (int) (Core.graphics.getWidth());
+            int h = (int) (Core.graphics.getHeight());
 
             if (buffer == null || buffer.getWidth() != w || buffer.getHeight() != h) {
                 if (buffer != null) buffer.dispose();
@@ -87,18 +85,12 @@ public class MDOBJLoader {
 
             Gl.enable(Gl.depthTest);
             Gl.depthFunc(Gl.less);
+            Gl.disable(Gl.blend);
             Gl.depthMask(true);
             Gl.enable(Gl.cullFace);
             Gl.cullFace(Gl.back);
 
-            cam.resize(w, h);
-            cam.fov = 60f;
-            cam.near = 0.1f;
-            cam.far = 1000f;
-            cam.position.setZero();
-            cam.up.set(Vec3.Y);
-            cam.lookAt(0f, 0f, -1f);
-            cam.update();
+            projection.setToProjection(0.1f, 1000f, 90f, (float) w / h);
 
             transform.idt()
                     .translate(x, y, z)
@@ -108,7 +100,7 @@ public class MDOBJLoader {
             shader.bind();
             shader.apply();
             shader.setUniformMatrix4("u_trans", transform.val);
-            shader.setUniformMatrix4("u_proj", cam.combined.val);
+            shader.setUniformMatrix4("u_proj", projection.val);
             shader.setUniformi("u_texture", 0);
             for (ModelPart part : model.parts) {
                 part.texture.bind(0);
@@ -117,7 +109,7 @@ public class MDOBJLoader {
 
             Gl.disable(Gl.cullFace);
             Gl.disable(Gl.depthTest);
-
+            Gl.enable(Gl.blend);
             buffer.end();
             //将拥有深度缓冲已经渲染好的obj模型合成到原画面
             Draw.blit(buffer.getTexture(), Shaders.screenspace);
@@ -129,7 +121,7 @@ public class MDOBJLoader {
         Pixmap pix = new Pixmap(1, 1);
         pix.fill(Color.magenta);
         //mipmap防止摩尔纹，但似乎没什么用？
-        Texture defaultTexture = new Texture(pix,true);
+        Texture defaultTexture = new Texture(pix, true);
         defaultTexture.setFilter(Texture.TextureFilter.mipMapLinearLinear, Texture.TextureFilter.linear);
         pix.dispose();
         materials.put("default", defaultTexture);
