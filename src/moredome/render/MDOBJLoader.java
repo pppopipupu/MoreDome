@@ -41,7 +41,7 @@ public class MDOBJLoader {
         float fixedZ = -15f;
         Vec2 screenPos = Core.camera.project(worldX, worldY);
 
-        float fov = 60f;
+        float fov = 90f;
         float visibleHeight = (float) (2.0 * Math.tan(Math.toRadians(fov / 2.0)) * Math.abs(fixedZ));
         float unitsPerPixel = visibleHeight / Core.graphics.getHeight();
 
