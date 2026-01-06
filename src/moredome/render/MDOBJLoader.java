@@ -4,18 +4,24 @@ import arc.Core;
 import arc.files.Fi;
 import arc.graphics.*;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g3d.Camera3D;
+import arc.graphics.gl.FrameBuffer;
 import arc.graphics.gl.Shader;
 import arc.math.geom.Mat3D;
 import arc.math.geom.Quat;
 import arc.math.geom.Vec2;
+import arc.math.geom.Vec3;
 import arc.struct.*;
 import arc.util.Log;
+import mindustry.graphics.Shaders;
 import moredome.MoreDome;
 import moredome.content.MDShaders;
 
 public class MDOBJLoader {
-    private static final Mat3D projection = new Mat3D();
+    private static final Camera3D cam = new Camera3D();
     private static final Mat3D transform = new Mat3D();
+    private static FrameBuffer buffer;
+    private static final float ssaa = 1.5f;
 
     public record ModelPart(Mesh mesh, Texture texture) {
     }
@@ -35,7 +41,7 @@ public class MDOBJLoader {
 
 
     public static void draw(MDModel model, float layer, float worldX, float worldY, Quat rotation, float scale, Shader shader) {
-        float fixedZ = -20f;
+        float fixedZ = -15f;
         Vec2 screenPos = Core.camera.project(worldX, worldY);
 
         float fov = 60f;
@@ -47,27 +53,10 @@ public class MDOBJLoader {
 
         draw(model, layer, tx, ty, fixedZ, rotation, scale * (Core.graphics.getWidth() / Core.camera.width), shader);
     }
-
-    public static void draw(MDModel model, float layer, float x, float y, float z, Quat rotation, float scale, Shader shader) {
-        if (model == null) {
-            Log.warn("Model is null!");
-            return;
-        }
-        Gl.enable(Gl.depthTest);
-        Gl.depthFunc(Gl.less);
-        Gl.depthMask(true);
-        Gl.enable(Gl.cullFace);
-        Gl.cullFace(Gl.back);
-        Gl.clear(Gl.depthBufferBit);
-        for (ModelPart part : model.parts) {
-            drawPart(part, layer, x, y, z, rotation, scale, shader);
-        }
-
-        Gl.disable(Gl.cullFace);
-        Gl.disable(Gl.depthTest);
-    }
-
-    /*
+    //我勒个烧钢啊，终于他妈修好了，老子思来想去唯独没有想过傻逼mindustry根本没有分配深度缓冲区
+    //我们是冠军
+    //留档用：之前的注释
+        /*
     我真的他妈的服了，这个剔除像是个骗局，妈的，3天了，单个多材质模型part之间的剔除还是有问题，就他妈这几个gl选项，开开关关也没用，他妈的剔除关系总是按照渲染顺序剔除的，脚比头后渲染就一定会显示在头上面
     草了，救救我吧，我还开了个drawPart方法，但都没有用，为什么？？？Seq换OrderedSet也只是调换了渲染顺序，让他妈鞋子代替脚渲染在头上面，那个深度测试也像是个圈套，说真的，我把它全删了效果也不会有任何变化
     你说可能是draw的lambda的问题？我草，这个我当然试过拿出来，拿出来他妈也不行，只会让所有后处理之类的效果失效，我真的快嗝屁了....
@@ -75,12 +64,42 @@ public class MDOBJLoader {
     也许我最开始渲染多材质模型的思路就是错的？也许吧，我累了...
      */
 
-    private static void drawPart(ModelPart part, float layer, float x, float y, float z, Quat rotation, float scale, Shader shader) {
+
+    public static void draw(MDModel model, float layer, float x, float y, float z, Quat rotation, float scale, Shader shader) {
+        if (model == null) {
+            Log.warn("Model is null!");
+            return;
+        }
+
         Draw.draw(layer, () -> {
-            Draw.flush();
-            float w = Core.graphics.getWidth();
-            float h = Core.graphics.getHeight();
-            projection.setToProjection(0.1f, 1000f, 60f, w / h);
+
+            int w = (int) (Core.graphics.getWidth()*ssaa);
+            int h = (int) (Core.graphics.getHeight()*ssaa);
+
+            if (buffer == null || buffer.getWidth() != w || buffer.getHeight() != h) {
+                if (buffer != null) buffer.dispose();
+                buffer = new FrameBuffer(w, h, true);
+            }
+
+            buffer.begin();
+            Gl.clearColor(0f, 0f, 0f, 0f);
+            Gl.clear(Gl.depthBufferBit | Gl.colorBufferBit);
+
+            Gl.enable(Gl.depthTest);
+            Gl.depthFunc(Gl.less);
+            Gl.depthMask(true);
+            Gl.enable(Gl.cullFace);
+            Gl.cullFace(Gl.back);
+
+            cam.resize(w, h);
+            cam.fov = 60f;
+            cam.near = 0.1f;
+            cam.far = 1000f;
+            cam.position.setZero();
+            cam.up.set(Vec3.Y);
+            cam.lookAt(0f, 0f, -1f);
+            cam.update();
+
             transform.idt()
                     .translate(x, y, z)
                     .rotate(rotation)
@@ -89,10 +108,19 @@ public class MDOBJLoader {
             shader.bind();
             shader.apply();
             shader.setUniformMatrix4("u_trans", transform.val);
-            shader.setUniformMatrix4("u_proj", projection.val);
+            shader.setUniformMatrix4("u_proj", cam.combined.val);
             shader.setUniformi("u_texture", 0);
-            part.texture.bind(0);
-            part.mesh.render(shader, Gl.triangles);
+            for (ModelPart part : model.parts) {
+                part.texture.bind(0);
+                part.mesh.render(shader, Gl.triangles);
+            }
+
+            Gl.disable(Gl.cullFace);
+            Gl.disable(Gl.depthTest);
+
+            buffer.end();
+            //将拥有深度缓冲已经渲染好的obj模型合成到原画面
+            Draw.blit(buffer.getTexture(), Shaders.screenspace);
         });
     }
 
@@ -100,7 +128,9 @@ public class MDOBJLoader {
         ObjectMap<String, Texture> materials = new ObjectMap<>();
         Pixmap pix = new Pixmap(1, 1);
         pix.fill(Color.magenta);
-        Texture defaultTexture = new Texture(pix);
+        //mipmap防止摩尔纹，但似乎没什么用？
+        Texture defaultTexture = new Texture(pix,true);
+        defaultTexture.setFilter(Texture.TextureFilter.mipMapLinearLinear, Texture.TextureFilter.linear);
         pix.dispose();
         materials.put("default", defaultTexture);
 
@@ -124,7 +154,7 @@ public class MDOBJLoader {
                     if (parts[0].equals("newmtl")) {
                         currentMtl = parts[1];
                     } else if (parts[0].equals("map_Kd") && currentMtl != null) {
-                        String texFileName = parts[parts.length - 1].replace('\\', '/');
+                        String texFileName = line.trim().substring(6).trim().replace('\\', '/');
                         Fi texFile = mtlFile.parent().child(texFileName);
                         if (texFile.exists()) {
                             materials.put(currentMtl, new Texture(texFile));
