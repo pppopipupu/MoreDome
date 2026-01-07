@@ -1,10 +1,15 @@
 package moredome.world.blocks.domes;
 
 import arc.math.Mathf;
+import arc.math.geom.Quat;
 import arc.util.Time;
+import mindustry.graphics.Layer;
 import mindustry.world.blocks.defense.OverdriveProjector;
 import mindustry.world.blocks.units.RepairTower;
 import mindustry.world.blocks.units.RepairTurret;
+import moredome.content.MDModels;
+import moredome.content.MDShaders;
+import moredome.render.MDOBJLoader;
 
 import static mindustry.Vars.indexer;
 
@@ -47,6 +52,12 @@ public class SlowdownDome extends OverdriveProjector {
                     useProgress %= useTime;
                 }
             }
+        }
+
+        @Override
+        public void draw() {
+            super.draw();
+            MDOBJLoader.draw(MDModels.koishi, Layer.max, x, y, new Quat(), 5f, MDShaders.wave);
         }
 
         @Override

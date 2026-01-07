@@ -50,16 +50,6 @@ public class MDOBJLoader {
 
         draw(model, layer, tx, ty, fixedZ, rotation, scale * (Core.graphics.getWidth() / Core.camera.width), shader);
     }
-    //我勒个烧钢啊，终于他妈修好了，老子思来想去唯独没有想过傻逼mindustry根本没有分配深度缓冲区
-    //我们是冠军
-    //留档用：之前的注释
-        /*
-    我真的他妈的服了，这个剔除像是个骗局，妈的，3天了，单个多材质模型part之间的剔除还是有问题，就他妈这几个gl选项，开开关关也没用，他妈的剔除关系总是按照渲染顺序剔除的，脚比头后渲染就一定会显示在头上面
-    草了，救救我吧，我还开了个drawPart方法，但都没有用，为什么？？？Seq换OrderedSet也只是调换了渲染顺序，让他妈鞋子代替脚渲染在头上面，那个深度测试也像是个圈套，说真的，我把它全删了效果也不会有任何变化
-    你说可能是draw的lambda的问题？我草，这个我当然试过拿出来，拿出来他妈也不行，只会让所有后处理之类的效果失效，我真的快嗝屁了....
-    哦对了，我也试过问llm，但愚蠢的llm总是会被那深度测试迷住，开始排列组合Gl深度测试和剔除面的那几个选项的顺序，要不然就是瞎动投影矩阵，改一堆不相关的东西，就算我明确提醒也没用，唉。
-    也许我最开始渲染多材质模型的思路就是错的？也许吧，我累了...
-     */
 
 
     public static void draw(MDModel model, float layer, float x, float y, float z, Quat rotation, float scale, Shader shader) {
@@ -71,8 +61,8 @@ public class MDOBJLoader {
         Draw.draw(layer, () -> {
             Draw.flush();
 
-            int w = (int) (Core.graphics.getWidth());
-            int h = (int) (Core.graphics.getHeight());
+            int w = Core.graphics.getWidth();
+            int h = Core.graphics.getHeight();
 
             if (buffer == null || buffer.getWidth() != w || buffer.getHeight() != h) {
                 if (buffer != null) buffer.dispose();
@@ -80,13 +70,14 @@ public class MDOBJLoader {
             }
 
             buffer.begin();
+            Gl.enable(Gl.depthTest);
+            Gl.depthMask(true);
+            Gl.depthFunc(Gl.less);
             Gl.clearColor(0f, 0f, 0f, 0f);
             Gl.clear(Gl.depthBufferBit | Gl.colorBufferBit);
 
-            Gl.enable(Gl.depthTest);
-            Gl.depthFunc(Gl.less);
             Gl.disable(Gl.blend);
-            Gl.depthMask(true);
+
             Gl.enable(Gl.cullFace);
             Gl.cullFace(Gl.back);
 
@@ -113,6 +104,8 @@ public class MDOBJLoader {
             buffer.end();
             //将拥有深度缓冲已经渲染好的obj模型合成到原画面
             Draw.blit(buffer.getTexture(), Shaders.screenspace);
+            // flush两遍就能正常渲染了，奇怪
+            Draw.flush();
         });
     }
 

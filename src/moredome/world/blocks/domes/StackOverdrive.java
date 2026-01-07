@@ -111,7 +111,6 @@ public class StackOverdrive extends OverdriveProjector {
             super.draw();
             float time = Mathf.lerp(0,360,Mathf.sin(Time.time * Mathf.PI/200));
             MDOBJLoader.draw(MDModels.koishi,Layer.max, x, y, new Quat().setEulerAngles(time,time,time), 6f, MDShaders.modelShader);
-            MDOBJLoader.draw(MDModels.koishi,Layer.max, x, y, new Quat().setEulerAngles(time,time,time), 6f, MDShaders.modelShader);
             Color rainbow = Tmp.c1.set(Color.red).shiftHue(Time.time);
             for (int i = 50; i < 201; i += 50) {
                 float f = 1f - (Time.time / i) % 1f;
